@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "558943473280",
+    "project_id": "cls055-codoc",
+    "storage_bucket": "cls055-codoc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558943473280:android:0d958b431c1602ff07e065",
+        "android_client_info": {
+          "package_name": "com.example.codoc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpcopR7yJL_Q-qhVfb0lOaus93TBsonzw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
