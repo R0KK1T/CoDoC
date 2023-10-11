@@ -7,7 +7,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -15,55 +15,115 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'CoDoc',
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
       home: Scaffold(
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              //Text
-              Text(
-                'CoDoc',
-                style: TextStyle(
-                  height: 4,
-                  fontSize: 60,
-                  fontWeight: FontWeight.w300,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-
-              // username,
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Username',
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                //Text
+                Text(
+                  'CoDoc',
+                  style: TextStyle(
+                    fontSize: 60,
+                    fontWeight: FontWeight.w300,
                   ),
                 ),
-              ),
 
-              // password,
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Password'),
-                  obscureText: true,
+                // username,
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 26, right: 26, bottom: 24.00),
+                  child: TextField(
+                    //controller: controller,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Username",
+                    ),
+                  ),
                 ),
-              ),
 
-              //Login Button
+                // password,
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 26, right: 26, bottom: 24.00),
+                  child: TextField(
+                    //controller: controller,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Password",
+                    ),
+                  ),
+                ),
 
-              FilledButton(
-                onPressed: null,
-                child: const Text('Enabled'),
-              ),
-            ],
+                //Login Button
+                SizedBox(
+                  // width: 300.0,
+                  height: 40.0,
+                  child: FilledButton(
+                    onPressed: () {}, //WHY DO I NEED NULL????
+                    child: Text(
+                      'Login',
+                      style: TextStyle(
+                        // fontSize: 20,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 24.00,
+                  ),
+                ),
+
+                //Text (Or log in with)
+                Padding(
+                  padding: EdgeInsets.only(
+                    bottom: 24.0,
+                  ),
+                  child: Text(
+                    'Or log in with',
+                  ),
+                ),
+
+                Padding(
+                  padding: EdgeInsets.only(
+                    bottom: 24.0,
+                  ),
+                  child: Icon(
+                    Icons.beach_access,
+                    color: Colors.blue,
+                    size: 36.0,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+//Widget _padding() {}
+
+
+             // Padding(
+                //   padding: EdgeInsets.only(
+                //       left: 27.0, top: 30, right: 27.0, bottom: 24),
+                //   child: TextField(
+                //     decoration: InputDecoration(
+                //       border: OutlineInputBorder(),
+                //       labelText: 'Username',
+                //     ),
+                //   ),
+                // ),    
