@@ -81,9 +81,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
     );
   }
 
-  SizedBox _textFieldName(controller) {
-    return SizedBox(
-      width: 340,
+  Padding _textFieldName(controller) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 26, right: 26),
       child: TextField(
         controller: controller,
         obscureText: false,
@@ -95,9 +95,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
     );
   }
 
-  SizedBox _textFieldEmail(controller) {
-    return SizedBox(
-      width: 340,
+  Padding _textFieldEmail(controller) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 26, right: 26),
       child: TextField(
         controller: controller,
         obscureText: false,
@@ -109,9 +109,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
     );
   }
 
-  SizedBox _textFieldPass(controller) {
-    return SizedBox(
-      width: 340,
+  Padding _textFieldPass(controller) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 26, right: 26),
       child: TextField(
         controller: controller,
         obscureText: true,
