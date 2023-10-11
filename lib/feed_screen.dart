@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -70,10 +70,18 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: 3,
+              child: GridView.builder(
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: selection.first == ViewType.listView ? 1 : 3,
+                  childAspectRatio: 1.0,
+                  crossAxisSpacing: 0.0,
+                  mainAxisSpacing: 0.0,
+                  mainAxisExtent: selection.first == ViewType.listView ? 400 : 135,
+                ),
+                itemCount: 15,
                 itemBuilder: (context, index) {
-                  return createCard();
+                  return createCard(selection.first);
                 },
               ),
             )
@@ -89,40 +97,85 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-Card createCard() {
-  return Card(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Container(
-          height: 400,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/documentation_example.PNG'),
-              fit: BoxFit.cover,
+Container createCard(ViewType viewType) {
+  switch (viewType) {
+    case ViewType.listView:
+      return ListViewCard();
+    case ViewType.gridView:
+      return GridViewCard();
+      
+  }
+}
+
+class GridViewCard extends Container {
+  GridViewCard({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      //decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+      //margin: EdgeInsets.all(5),
+      //padding: EdgeInsets.all(5),
+      child: Stack(
+        children: <Widget>[
+          Column(
+            //crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Image.asset(
+                  'assets/images/documentation_example.PNG',
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ListViewCard extends Container {
+  ListViewCard({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Expanded(
+              child: Image.asset(
+                'assets/images/documentation_example.PNG',
+                fit: BoxFit.fill,
+              ),
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'Title',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Title',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'Description',
-            style: TextStyle(
-              fontSize: 16,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Description',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
-      ],
-    ),
-  );
+      ),
+    );
+  }
 }
