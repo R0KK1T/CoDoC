@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: 1,
+                itemCount: 3,
                 itemBuilder: (context, index) {
                   return createCard();
                 },
@@ -91,17 +91,38 @@ class _MyHomePageState extends State<MyHomePage> {
 
 Card createCard() {
   return Card(
-    color: Colors.black,
-    child: SizedBox(
-      width: 100,
-      height: 100,
-      child: ListTile(
-        title: Text("Hej"),
-        onTap: () {
-          // Handle item tap
-          print('Tapped on');
-        },
-      ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Container(
+          height: 400,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/documentation_example.PNG'),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Title',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Description',
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+        ),
+      ],
     ),
   );
 }
