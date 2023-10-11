@@ -30,7 +30,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-enum ViewType {listView, gridView}
+enum ViewType { listView, gridView }
 
 class _MyHomePageState extends State<MyHomePage> {
   Set<ViewType> selection = {ViewType.listView};
@@ -55,11 +55,13 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.all(8.0),
               child: SegmentedButton(
                 segments: const <ButtonSegment<ViewType>>[
-                  ButtonSegment(value: ViewType.listView, icon: Icon(Icons.view_agenda)),
-                  ButtonSegment(value: ViewType.gridView, icon: Icon(Icons.apps_rounded)),
+                  ButtonSegment(
+                      value: ViewType.listView, icon: Icon(Icons.view_agenda)),
+                  ButtonSegment(
+                      value: ViewType.gridView, icon: Icon(Icons.apps_rounded)),
                 ],
                 selected: selection,
-                onSelectionChanged: (Set<ViewType> newSelection){
+                onSelectionChanged: (Set<ViewType> newSelection) {
                   setState(() {
                     selection = newSelection;
                   });
@@ -67,11 +69,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 //multiSelectionEnabled: true,
               ),
             ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 1,
+                itemBuilder: (context, index) {
+                  return createCard();
+                },
+              ),
+            )
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: () {},
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
@@ -79,6 +89,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-Card createCard (){
-  return Card(color:Colors.black, child: SizedBox(width: 100, height: 100, child: Text("I am a card!"),));
+Card createCard() {
+  return Card(
+    color: Colors.black,
+    child: SizedBox(
+      width: 100,
+      height: 100,
+      child: ListTile(
+        title: Text("Hej"),
+        onTap: () {
+          // Handle item tap
+          print('Tapped on');
+        },
+      ),
+    ),
+  );
 }
