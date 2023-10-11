@@ -45,21 +45,27 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            const Icon(Icons.family_restroom_rounded),
-            SegmentedButton(
-              segments: const <ButtonSegment<ViewType>>[
-                ButtonSegment(value: ViewType.listView, icon: Icon(Icons.view_agenda)),
-                ButtonSegment(value: ViewType.gridView, icon: Icon(Icons.apps_rounded)),
-              ],
-              selected: selection,
-              onSelectionChanged: (Set<ViewType> newSelection){
-                setState(() {
-                  selection = newSelection;
-                });
-              },
-              //multiSelectionEnabled: true,
+            const Padding(
+              padding: EdgeInsets.only(top: 24.0),
+              child: Icon(Icons.family_restroom_rounded, size: 96),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SegmentedButton(
+                segments: const <ButtonSegment<ViewType>>[
+                  ButtonSegment(value: ViewType.listView, icon: Icon(Icons.view_agenda)),
+                  ButtonSegment(value: ViewType.gridView, icon: Icon(Icons.apps_rounded)),
+                ],
+                selected: selection,
+                onSelectionChanged: (Set<ViewType> newSelection){
+                  setState(() {
+                    selection = newSelection;
+                  });
+                },
+                //multiSelectionEnabled: true,
+              ),
             ),
           ],
         ),
@@ -71,4 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+
+Card createCard (){
+  return Card(color:Colors.black, child: SizedBox(width: 100, height: 100, child: Text("I am a card!"),));
 }
