@@ -9,6 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -117,13 +118,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
         obscureText: true,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
-          labelText: "Password",
+          labelText: "New Password",
         ),
       ),
     );
   }
 
-  Widget _profilePic() {
+  Container _profilePic() {
     return Container(
       height: 150,
       width: 150,
