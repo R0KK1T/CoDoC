@@ -15,23 +15,20 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyProfilePage(title: 'Flutter Demo Home Page'),
+      home: const MySettingsPage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyProfilePage extends StatefulWidget {
-  const MyProfilePage({super.key, required this.title});
+class MySettingsPage extends StatefulWidget {
+  const MySettingsPage({super.key, required this.title});
   final String title;
 
   @override
-  State<MyProfilePage> createState() => _MyProfilePageState();
+  State<MySettingsPage> createState() => _MySettingsPageState();
 }
 
-class _MyProfilePageState extends State<MyProfilePage> {
-  TextEditingController controllerName = TextEditingController();
-  TextEditingController controllerEmail = TextEditingController();
-  TextEditingController controllerPass = TextEditingController();
+class _MySettingsPageState extends State<MySettingsPage> {
   bool light = false;
   bool noti = true;
   MaterialStateProperty<Icon?> thumbIcon =
