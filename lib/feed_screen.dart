@@ -77,7 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   childAspectRatio: 1.0,
                   crossAxisSpacing: 0.0,
                   mainAxisSpacing: 0.0,
-                  mainAxisExtent: selection.first == ViewType.listView ? 400 : 135,
+                  mainAxisExtent:
+                      selection.first == ViewType.listView ? 400 : 135,
                 ),
                 itemCount: 15,
                 itemBuilder: (context, index) {
@@ -103,7 +104,6 @@ Container createCard(ViewType viewType) {
       return ListViewCard();
     case ViewType.gridView:
       return GridViewCard();
-      
   }
 }
 
@@ -114,25 +114,23 @@ class GridViewCard extends Container {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      //decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-      //margin: EdgeInsets.all(5),
-      //padding: EdgeInsets.all(5),
-      child: Stack(
-        children: <Widget>[
-          Column(
-            //crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: Image.asset(
-                  'assets/images/documentation_example.PNG',
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
+    return Image.asset(
+      'assets/images/documentation_example.PNG',
     );
+    /*return Stack(
+      children: <Widget>[
+        Column(
+          //crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: Image.asset(
+                'assets/images/documentation_example.PNG',
+              ),
+            ),
+          ],
+        )
+      ],
+    );*/
   }
 }
 
@@ -140,41 +138,48 @@ class ListViewCard extends Container {
   ListViewCard({
     super.key,
   });
+  final List<String> images = [
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTIZccfNPnqalhrWev-Xo7uBhkor57_rKbkw&usqp=CAU",
+    "https://wallpaperaccess.com/full/2637581.jpg"
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Expanded(
-              child: Image.asset(
-                'assets/images/documentation_example.PNG',
-                fit: BoxFit.fill,
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Expanded(
+            //padding: const EdgeInsets.all(8.0),
+            child: PageView.builder(
+                itemCount: 2,
+                pageSnapping: true,
+                itemBuilder: (context, pagePosition) {
+                  return Container(
+                      margin: EdgeInsets.all(5),
+                      child: Image.network(images[pagePosition]));
+                }),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Title',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Title',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Description',
+              style: TextStyle(
+                fontSize: 16,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Description',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
