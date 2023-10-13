@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   crossAxisSpacing: 0.0,
                   mainAxisSpacing: 0.0,
                   mainAxisExtent:
-                      selection.first == ViewType.listView ? 400 : 135,
+                      selection.first == ViewType.listView ? 500 : 135,
                 ),
                 itemCount: 15,
                 itemBuilder: (context, index) {
@@ -117,20 +117,6 @@ class GridViewCard extends Container {
     return Image.asset(
       'assets/images/documentation_example.PNG',
     );
-    /*return Stack(
-      children: <Widget>[
-        Column(
-          //crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: Image.asset(
-                'assets/images/documentation_example.PNG',
-              ),
-            ),
-          ],
-        )
-      ],
-    );*/
   }
 }
 
@@ -138,10 +124,6 @@ class ListViewCard extends Container {
   ListViewCard({
     super.key,
   });
-  final List<String> images = [
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTIZccfNPnqalhrWev-Xo7uBhkor57_rKbkw&usqp=CAU",
-    "https://wallpaperaccess.com/full/2637581.jpg"
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -150,32 +132,44 @@ class ListViewCard extends Container {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Expanded(
-            //padding: const EdgeInsets.all(8.0),
             child: PageView.builder(
                 itemCount: 2,
                 pageSnapping: true,
                 itemBuilder: (context, pagePosition) {
                   return Container(
-                      margin: EdgeInsets.all(5),
-                      child: Image.network(images[pagePosition]));
+                      //margin: EdgeInsets.all(5),
+                      width: 100,
+                      height: 100,
+                      child: Image.asset(
+                        'assets/images/documentation_example.PNG',
+                      )); //Image.network(images[pagePosition]));
                 }),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(top: 8, left: 8),
             child: Text(
               'Title',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Text(
+              '2 aug. 2023',
+              style: TextStyle(
+                fontSize: 16,
               ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Description',
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 14,
               ),
             ),
           ),
