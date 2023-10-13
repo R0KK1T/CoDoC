@@ -38,7 +38,58 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            ListTile(
+              title: const Text('Item 1'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+            ListTile(
+              title: const Text('Item 2'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+            Divider(
+              indent: 16,
+              endIndent: 16,
+            ),
+            ListTile(
+              title: const Text(
+                'Add project log',
+                style: TextStyle(fontSize: 12),
+              ),
+              leading: Icon(
+                Icons.add,
+                size: 18,
+              ),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+            ListTile(
+              title: const Text(
+                'Profile settings',
+                style: TextStyle(fontSize: 12),
+              ),
+              leading: Icon(
+                Icons.settings,
+                size: 18,
+              ),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: const Text('CODOC'),
         centerTitle: true,
