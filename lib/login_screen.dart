@@ -56,7 +56,7 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
                 ),
               ),
 
-              // username,
+              //Email
               Padding(
                 padding: const EdgeInsets.only(
                     left: 26, top: 24, right: 26, bottom: 24.00),
@@ -65,7 +65,7 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
                   obscureText: false,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: "Username",
+                    labelText: "Email",
                   ),
                 ),
               ),
@@ -129,12 +129,12 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
                   textStyle: const TextStyle(fontSize: 15),
                 ),
                 onPressed: () {
-                  print('Signup button tapped'); //Debugger
+                  print('Signin button tapped'); //Debugger
 
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => SignUpScreen()));
                 },
-                child: const Text('Sign up here'),
+                child: const Text('Sign in here'),
               ),
             ],
           ),
