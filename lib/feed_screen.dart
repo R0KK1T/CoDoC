@@ -131,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
             title: const Text('CODOC'),
             backgroundColor: Colors.lightGreen,
             centerTitle: true,
-            pinned: true, // App bar will be pinned to the top
+            pinned: true,
           ),
           SliverToBoxAdapter(
             child: Column(
@@ -166,8 +166,8 @@ class _MyHomePageState extends State<MyHomePage> {
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: selection.first == ViewType.listView ? 1 : 3,
               childAspectRatio: 1.0,
-              crossAxisSpacing: 0.0,
-              mainAxisSpacing: 0.0,
+              crossAxisSpacing: 5.0,
+              mainAxisSpacing: 1.5,
               mainAxisExtent: selection.first == ViewType.listView ? 500 : 135,
             ),
             delegate: SliverChildBuilderDelegate(
@@ -183,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: () {},
         tooltip: 'Create post',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
@@ -211,11 +211,11 @@ class GridViewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      itemCount: imagePaths.length,
+      itemCount: 1,
       gridDelegate:
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-      itemBuilder: (BuildContext context, int index) {
-        String imagePath = imagePaths[index];
+      itemBuilder: (BuildContext context, index) {
+        String imagePath = imagePaths[0];
         return Image.asset(
           imagePath,
           fit: BoxFit.cover,
@@ -244,10 +244,8 @@ class ListViewCard extends StatelessWidget {
               itemCount: imagePaths.length,
               pageSnapping: true,
               itemBuilder: (context, pagePosition) {
-                return SizedBox(
-                  //margin: EdgeInsets.all(5),
-                  width: 100,
-                  height: 100,
+                return Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
                   child: Image.asset(
                     imagePaths[pagePosition],
                   ),
