@@ -132,16 +132,48 @@ class _MyUploadPageState extends State<MyUploadPage> {
   }
 
   Container _photo() {
+    // bool isPicture = false;
+    // if (isPicture) {
+    //   return Container(
+    //     height: 250,
+    //     width: 340,
+    //     decoration: BoxDecoration(
+    //       // borderRadius: BorderRadius.circular(12),
+    //       image: DecorationImage(
+    //         image: AssetImage('assets/images/IMG_2649.jpg'),
+    //         fit: BoxFit.cover,
+    //       ),
+    //     ),
+    //   );
+    // } else {
     return Container(
       height: 250,
       width: 340,
-      decoration: BoxDecoration(
-        // borderRadius: BorderRadius.circular(12),
-        image: DecorationImage(
-          image: AssetImage('assets/images/IMG_2649.jpg'),
-          fit: BoxFit.cover,
+      child: IconButton(
+        iconSize: 87,
+        icon: Icon(Icons.add_a_photo),
+        onPressed: () => showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => SimpleDialog(
+            children: <Widget>[
+              SimpleDialogOption(
+                onPressed: () {
+                  debugPrint("takes pic");
+                },
+                child: const Text('Take picture'),
+              ),
+              SimpleDialogOption(
+                onPressed: () {
+                  debugPrint("from gallery");
+                },
+                child: const Text('Choose from gallery'),
+              ),
+            ],
+          ),
         ),
+        // child: const Text('Show Dialog'),
       ),
     );
+    // }
   }
 }
