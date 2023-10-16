@@ -31,32 +31,67 @@ class MyUploadPage extends StatefulWidget {
 class _MyUploadPageState extends State<MyUploadPage> {
   TextEditingController controllerTitle = TextEditingController();
   TextEditingController controllerDescription = TextEditingController();
+  bool isButtonEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    controllerTitle.addListener(() {
+      setState(() {
+        isButtonEnabled = controllerTitle.text.isNotEmpty;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("Profile"),
+        title: Text("Create Post"),
         centerTitle: true,
       ),
       body: Center(
         child: SingleChildScrollView(
           child: Column(children: <Widget>[
             _photo(),
-            Padding(padding: EdgeInsets.only(bottom: 48)),
+            Padding(padding: EdgeInsets.only(bottom: 26)),
+
+// --------- Add more than one photo ---------
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 26, right: 208, bottom: 26),
+            //   child: FilledButton.tonal(
+            //     onPressed: () {},
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: const <Widget>[
+            //         Icon(Icons.add_a_photo),
+            //         SizedBox(width: 8),
+            //         Text('Add photo'),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+// --------- Add more than one photo ---------
+
             _textFieldTitle(controllerTitle),
-            Padding(padding: EdgeInsets.only(bottom: 24)),
+            Padding(
+              padding: const EdgeInsets.only(left: 26),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text("* mandatory"),
+                ],
+              ),
+            ), //Align to left
+            Padding(padding: EdgeInsets.only(bottom: 26)),
             _textFieldDescription(controllerDescription),
-            Padding(padding: EdgeInsets.only(bottom: 24)),
+            Padding(padding: EdgeInsets.only(bottom: 26)),
             Padding(
               padding: const EdgeInsets.only(bottom: 26),
-              child: SizedBox(
-                height: 40,
-                child: FilledButton(
-                  onPressed: () {},
-                  child: const Text('Upload'),
-                ),
+              child: FilledButton(
+                onPressed: controllerTitle.text.isNotEmpty ? () {} : null,
+                child: const Text('Upload'),
               ),
             ),
           ]),
@@ -73,7 +108,7 @@ class _MyUploadPageState extends State<MyUploadPage> {
         obscureText: false,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
-          labelText: "Title",
+          labelText: "Title*",
         ),
       ),
     );
@@ -84,6 +119,7 @@ class _MyUploadPageState extends State<MyUploadPage> {
       padding: const EdgeInsets.only(left: 26, right: 26),
       child: TextField(
         maxLines: 3,
+        maxLength: 140,
         controller: controller,
         obscureText: false,
         decoration: InputDecoration(
@@ -100,7 +136,7 @@ class _MyUploadPageState extends State<MyUploadPage> {
       height: 250,
       width: 340,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        // borderRadius: BorderRadius.circular(12),
         image: DecorationImage(
           image: AssetImage('assets/images/IMG_2649.jpg'),
           fit: BoxFit.cover,
