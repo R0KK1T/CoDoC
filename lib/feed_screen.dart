@@ -166,9 +166,9 @@ class _MyHomePageState extends State<MyHomePage> {
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: selection.first == ViewType.listView ? 1 : 3,
               childAspectRatio: 1.0,
-              crossAxisSpacing: 0.0,
-              mainAxisSpacing: 0.0,
-              mainAxisExtent: selection.first == ViewType.listView ? 500 : 135,
+              crossAxisSpacing: 5.0,
+              mainAxisSpacing: 1.5,
+              mainAxisExtent: selection.first == ViewType.listView ? 500 : 170,
             ),
             delegate: SliverChildBuilderDelegate(
               (context, index) {
@@ -210,18 +210,15 @@ class GridViewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
+    return GridView.count(
       physics: NeverScrollableScrollPhysics(),
-      itemCount: 1,
-      gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-      itemBuilder: (BuildContext context, index) {
-        String imagePath = imagePaths[0];
-        return Image.asset(
-          imagePath,
+      crossAxisCount: 1,
+      children: [
+        Image.asset(
+          imagePaths[0],
           fit: BoxFit.fill,
-        );
-      },
+        ),
+      ],
     );
   }
 }
