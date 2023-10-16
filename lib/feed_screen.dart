@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -174,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
               (context, index) {
                 return createCard(selection.first, imagePaths);
               },
-              childCount: 15,
+              childCount: 40,
             ),
           ),
         ],
@@ -202,8 +203,9 @@ Widget createCard(ViewType viewType, List<String> imagePaths) {
 
 class GridViewCard extends StatelessWidget {
   final List<String> imagePaths;
+  final _random = new Random();
 
-  const GridViewCard({
+  GridViewCard({
     Key? key,
     required this.imagePaths,
   }) : super(key: key);
@@ -219,7 +221,7 @@ class GridViewCard extends StatelessWidget {
         crossAxisCount: 1,
         children: [
           Image.asset(
-            imagePaths[0],
+            imagePaths[_random.nextInt(2)],
             fit: BoxFit.cover,
           ),
         ],
