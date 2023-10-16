@@ -52,17 +52,13 @@ class _MyHomePageState extends State<MyHomePage> {
       drawer: Drawer(
         child: Column(
           children: [
-            DrawerHeader(
-              padding: EdgeInsets.zero,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: Text(
-                    'Groups',
-                    style: TextStyle(
-                      fontSize: 24,
-                    ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: ListTile(
+                title: const Text(
+                  "Groups",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -70,6 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
               child: ListView(
                 physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
                 children: [
                   ListTile(
                     title: const Text('CIU765 Group 13'),
