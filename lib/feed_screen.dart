@@ -50,21 +50,27 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
-        child: ListView(
+        child: Column(
           children: [
-            ListTile(
-              title: const Text('Item 1'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-            ListTile(
-              title: const Text('Item 2'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
+            Expanded(
+              child: ListView(
+                children: [
+                  ListTile(
+                    title: const Text('Item 1'),
+                    onTap: () {
+                      // Update the state of the app.
+                      // ...
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Item 2'),
+                    onTap: () {
+                      // Update the state of the app.
+                      // ...
+                    },
+                  ),
+                ],
+              ),
             ),
             Divider(
               indent: 16,
@@ -101,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+
       /* appBar: AppBar(
         title: const Text('CODOC'),
         centerTitle: true,
@@ -109,6 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
         slivers: [
           SliverAppBar(
             title: const Text('CODOC'),
+            backgroundColor: Colors.lightGreen,
             centerTitle: true,
             pinned: true, // App bar will be pinned to the top
           ),
@@ -151,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                return createCard(selection.first, imagePaths, index);
+                return createCard(selection.first, imagePaths);
               },
               childCount: 15,
             ),
@@ -160,19 +168,19 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        tooltip: 'Increment',
+        tooltip: 'Create post',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
 
-Widget createCard(ViewType viewType, List<String> imagePaths, int index) {
+Widget createCard(ViewType viewType, List<String> imagePaths) {
   switch (viewType) {
     case ViewType.listView:
       return ListViewCard(imagePaths: imagePaths);
     case ViewType.gridView:
-      return GridViewCard(index: index, imagePaths: imagePaths);
+      return GridViewCard(imagePaths: imagePaths);
     default:
       // Handle other cases if needed
       return Container();
@@ -180,21 +188,26 @@ Widget createCard(ViewType viewType, List<String> imagePaths, int index) {
 }
 
 class GridViewCard extends StatelessWidget {
-  final int index;
   final List<String> imagePaths;
 
   const GridViewCard({
     Key? key,
-    required this.index,
     required this.imagePaths,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String imagePath = imagePaths[index % imagePaths.length];
-    return Image.asset(
-      imagePath,
-      fit: BoxFit.cover,
+    return GridView.builder(
+      itemCount: imagePaths.length,
+      gridDelegate:
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      itemBuilder: (BuildContext context, int index) {
+        String imagePath = imagePaths[index];
+        return Image.asset(
+          imagePath,
+          fit: BoxFit.cover,
+        );
+      },
     );
   }
 }
