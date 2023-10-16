@@ -101,55 +101,62 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      appBar: AppBar(
+      /* appBar: AppBar(
         title: const Text('CODOC'),
         centerTitle: true,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.only(top: 24.0),
-              child: Icon(Icons.family_restroom_rounded, size: 96),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SegmentedButton(
-                segments: const <ButtonSegment<ViewType>>[
-                  ButtonSegment(
-                      value: ViewType.listView, icon: Icon(Icons.view_agenda)),
-                  ButtonSegment(
-                      value: ViewType.gridView, icon: Icon(Icons.apps_rounded)),
-                ],
-                selected: selection,
-                onSelectionChanged: (Set<ViewType> newSelection) {
-                  setState(() {
-                    selection = newSelection;
-                  });
-                },
-                //multiSelectionEnabled: true,
-              ),
-            ),
-            Expanded(
-              child: GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: selection.first == ViewType.listView ? 1 : 3,
-                  childAspectRatio: 1.0,
-                  crossAxisSpacing: 0.0,
-                  mainAxisSpacing: 0.0,
-                  mainAxisExtent:
-                      selection.first == ViewType.listView ? 500 : 135,
+      ), */
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            title: const Text('CODOC'),
+            centerTitle: true,
+            pinned: true, // App bar will be pinned to the top
+          ),
+          SliverToBoxAdapter(
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 24.0),
+                  child: Icon(Icons.family_restroom_rounded, size: 96),
                 ),
-                itemCount: 15 * imagePaths.length,
-                itemBuilder: (context, index) {
-                  return createCard(selection.first, imagePaths, index);
-                },
-              ),
-            )
-          ],
-        ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SegmentedButton(
+                    segments: const <ButtonSegment<ViewType>>[
+                      ButtonSegment(
+                          value: ViewType.listView,
+                          icon: Icon(Icons.view_agenda)),
+                      ButtonSegment(
+                          value: ViewType.gridView,
+                          icon: Icon(Icons.apps_rounded)),
+                    ],
+                    selected: selection,
+                    onSelectionChanged: (Set<ViewType> newSelection) {
+                      setState(() {
+                        selection = newSelection;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SliverGrid(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: selection.first == ViewType.listView ? 1 : 3,
+              childAspectRatio: 1.0,
+              crossAxisSpacing: 0.0,
+              mainAxisSpacing: 0.0,
+              mainAxisExtent: selection.first == ViewType.listView ? 500 : 135,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return createCard(selection.first, imagePaths, index);
+              },
+              childCount: 15,
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
@@ -163,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
 Widget createCard(ViewType viewType, List<String> imagePaths, int index) {
   switch (viewType) {
     case ViewType.listView:
-      return ListViewCard();
+      return ListViewCard(imagePaths: imagePaths);
     case ViewType.gridView:
       return GridViewCard(index: index, imagePaths: imagePaths);
     default:
@@ -192,10 +199,13 @@ class GridViewCard extends StatelessWidget {
   }
 }
 
-class ListViewCard extends Container {
-  ListViewCard({
-    super.key,
-  });
+class ListViewCard extends StatelessWidget {
+  final List<String> imagePaths;
+
+  const ListViewCard({
+    Key? key,
+    required this.imagePaths,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -205,17 +215,19 @@ class ListViewCard extends Container {
         children: <Widget>[
           Expanded(
             child: PageView.builder(
-                itemCount: 2,
-                pageSnapping: true,
-                itemBuilder: (context, pagePosition) {
-                  return Container(
-                      //margin: EdgeInsets.all(5),
-                      width: 100,
-                      height: 100,
-                      child: Image.asset(
-                        'assets/images/documentation_example.PNG',
-                      )); //Image.network(images[pagePosition]));
-                }),
+              itemCount: imagePaths.length,
+              pageSnapping: true,
+              itemBuilder: (context, pagePosition) {
+                return SizedBox(
+                  //margin: EdgeInsets.all(5),
+                  width: 100,
+                  height: 100,
+                  child: Image.asset(
+                    imagePaths[pagePosition],
+                  ),
+                ); //Image.network(images[pagePosition]));
+              },
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8, left: 8),
