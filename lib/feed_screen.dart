@@ -52,18 +52,34 @@ class _MyHomePageState extends State<MyHomePage> {
       drawer: Drawer(
         child: Column(
           children: [
+            DrawerHeader(
+              padding: EdgeInsets.zero,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Text(
+                    'Groups',
+                    style: TextStyle(
+                      fontSize: 24,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             Expanded(
               child: ListView(
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
                   ListTile(
-                    title: const Text('Item 1'),
+                    title: const Text('CIU765 Group 13'),
                     onTap: () {
                       // Update the state of the app.
                       // ...
                     },
                   ),
                   ListTile(
-                    title: const Text('Item 2'),
+                    title: const Text('CLA153 Group 13'),
                     onTap: () {
                       // Update the state of the app.
                       // ...
