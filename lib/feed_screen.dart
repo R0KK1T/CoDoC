@@ -16,15 +16,22 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(
+        title: 'Flutter Demo Home Page',
+        imagePaths: [
+          'assets/images/documentation_example.PNG',
+          'assets/images/documentation_example_2.PNG'
+        ],
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title, required this.imagePaths});
 
   final String title;
+  final List<String> imagePaths;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -34,6 +41,10 @@ enum ViewType { listView, gridView }
 
 class _MyHomePageState extends State<MyHomePage> {
   Set<ViewType> selection = {ViewType.listView};
+  List<String> imagePaths = [
+    'assets/images/documentation_example.PNG',
+    'assets/images/documentation_example_2.png',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -131,9 +142,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisExtent:
                       selection.first == ViewType.listView ? 500 : 135,
                 ),
-                itemCount: 15,
+                itemCount: 15 * imagePaths.length,
                 itemBuilder: (context, index) {
-                  return createCard(selection.first);
+                  return createCard(selection.first, imagePaths, index);
                 },
               ),
             )
@@ -149,24 +160,34 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-Container createCard(ViewType viewType) {
+Widget createCard(ViewType viewType, List<String> imagePaths, int index) {
   switch (viewType) {
     case ViewType.listView:
       return ListViewCard();
     case ViewType.gridView:
-      return GridViewCard();
+      return GridViewCard(index: index, imagePaths: imagePaths);
+    default:
+      // Handle other cases if needed
+      return Container();
   }
 }
 
-class GridViewCard extends Container {
-  GridViewCard({
-    super.key,
-  });
+class GridViewCard extends StatelessWidget {
+  final int index;
+  final List<String> imagePaths;
+
+  const GridViewCard({
+    Key? key,
+    required this.index,
+    required this.imagePaths,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String imagePath = imagePaths[index % imagePaths.length];
     return Image.asset(
-      'assets/images/documentation_example.PNG',
+      imagePath,
+      fit: BoxFit.cover,
     );
   }
 }
