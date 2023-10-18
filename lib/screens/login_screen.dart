@@ -38,7 +38,20 @@ class MyLoginScreen extends StatefulWidget {
   }
 }
 
+const double horizontalPadding = 26;
+const double verticalPadding = 24;
+
 class _MyLoginScreenState extends State<MyLoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +72,10 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
               //Email
               Padding(
                 padding: const EdgeInsets.only(
-                    left: 26, top: 24, right: 26, bottom: 24.00),
+                    left: horizontalPadding,
+                    top: verticalPadding,
+                    right: horizontalPadding,
+                    bottom: verticalPadding),
                 child: TextFormField(
                   //controller: controller,
                   obscureText: false,
@@ -72,8 +88,11 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
 
               // password,
               Padding(
-                padding:
-                    const EdgeInsets.only(left: 26, right: 26, bottom: 24.00),
+                padding: const EdgeInsets.only(
+                  left: horizontalPadding,
+                  right: horizontalPadding,
+                  bottom: verticalPadding,
+                ),
                 child: TextFormField(
                   //controller: controller,
                   obscureText: true,
