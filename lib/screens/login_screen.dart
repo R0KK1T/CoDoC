@@ -190,7 +190,7 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => SignUpScreen()));
                 },
-                child: const Text('Sign in here'),
+                child: const Text('Sign up here'),
               ),
             ],
           ),
