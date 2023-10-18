@@ -99,7 +99,7 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
                   fontWeight: FontWeight.w300,
                 ),
               ),
-
+            
               //Email
               Padding(
                 padding: const EdgeInsets.only(

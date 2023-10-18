@@ -24,13 +24,13 @@ class AuthMethods {
     required String email,
     required String password,
     required String username,
-    //required Uint8List file,
+    required Uint8List file,
   }) async {
     String response = "Some error Occurred";
     try {
       if (email.isNotEmpty ||
           password.isNotEmpty ||
-          username.isNotEmpty /* file != null */) {
+          username.isNotEmpty || file != null) {
         // register user
         UserCredential userCredentials =
             await _auth.createUserWithEmailAndPassword(
@@ -38,7 +38,7 @@ class AuthMethods {
           password: password,
         );
 
-        /* String photoUrl = await StorageMethods()
+        String photoUrl = await StorageMethods()
             .uploadImageToStorage('profilePics', file, false);
 
         model.User user = model.User(
@@ -46,16 +46,18 @@ class AuthMethods {
           userId: userCredentials.user!.uid,
           photoUrl: photoUrl,
           email: email,
-        ); */
+        );
 
         // adding user in our database
         await _firestore.collection("users").doc(userCredentials.user!.uid).set(
-            //user.toJson(),
-            {
+            user.toJson(),
+            /* {
               'username': username,
               'user_id': userCredentials.user!.uid,
+              'photoUrl'
               'email': email,
-            });
+
+            } */);
 
         response = "success";
       } else {
