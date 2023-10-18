@@ -1,3 +1,4 @@
+import 'package:codoc/firebase/firebase_authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -9,6 +10,10 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +37,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 padding: const EdgeInsets.only(
                     left: 26, top: 24, right: 26, bottom: 24.00),
                 child: TextFormField(
-                  //controller: controller,
+                  controller: _emailController,
                   obscureText: false,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -46,7 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 padding:
                     const EdgeInsets.only(left: 26, right: 26, bottom: 24.00),
                 child: TextFormField(
-                  //controller: controller,
+                  controller: _usernameController,
                   obscureText: false,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -60,7 +65,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 padding:
                     const EdgeInsets.only(left: 26, right: 26, bottom: 24.00),
                 child: TextFormField(
-                  //controller: controller,
+                  controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -74,7 +79,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 // width: 300.0,
                 height: 40.0,
                 child: FilledButton(
-                  onPressed: () {}, //WHY DO I NEED NULL????
+                  onPressed: () async {
+                    String response = await AuthMethods().signUpUser(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                        username: _usernameController.text);
+                    print(response);
+                  }, //WHY DO I NEED NULL????
                   child: Text(
                     'Sign up',
                     style: TextStyle(

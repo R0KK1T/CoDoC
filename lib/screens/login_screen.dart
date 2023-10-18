@@ -2,6 +2,9 @@ import 'package:codoc/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import '../firebase/firebase_options.dart';
+import 'package:codoc/firebase/firebase_authentication.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:codoc/utils/utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,12 +47,40 @@ const double verticalPadding = 24;
 class _MyLoginScreenState extends State<MyLoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+  }
+
+  void loginUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String authenticationResponse = await AuthMethods().loginUser(
+        email: _emailController.text, password: _passwordController.text);
+    if (authenticationResponse == 'success') {
+      debugPrint("Successfully logged in");
+      if (context.mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => PlaceholderWidget()),
+            (route) => false);
+
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      if (context.mounted) {
+        showSnackBar(context, authenticationResponse);
+      }
+    }
   }
 
   @override
@@ -77,7 +108,7 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
                     right: horizontalPadding,
                     bottom: verticalPadding),
                 child: TextFormField(
-                  //controller: controller,
+                  controller: _emailController,
                   obscureText: false,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -94,7 +125,7 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
                   bottom: verticalPadding,
                 ),
                 child: TextFormField(
-                  //controller: controller,
+                  controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -108,7 +139,9 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
                 // width: 300.0,
                 height: 40.0,
                 child: FilledButton(
-                  onPressed: () {}, //WHY DO I NEED NULL????
+                  onPressed: () {
+                    loginUser();
+                  },
                   child: Text(
                     'Login',
                     style: TextStyle(
@@ -160,5 +193,45 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
         ),
       ),
     );
+  }
+}
+
+class PlaceholderWidget extends StatefulWidget {
+  const PlaceholderWidget({Key? key}) : super(key: key);
+
+  @override
+  State<PlaceholderWidget> createState() => _PlaceholderWidgetState();
+}
+
+class _PlaceholderWidgetState extends State<PlaceholderWidget> {
+  int _page = 0;
+  late PageController pageController; // for tabs animation
+
+  @override
+  void initState() {
+    super.initState();
+    pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    pageController.dispose();
+  }
+
+  void onPageChanged(int page) {
+    setState(() {
+      _page = page;
+    });
+  }
+
+  void navigationTapped(int page) {
+    //Animating Page
+    pageController.jumpToPage(page);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold();
   }
 }

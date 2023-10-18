@@ -24,46 +24,47 @@ class AuthMethods {
     required String email,
     required String password,
     required String username,
-    required String bio,
-    required Uint8List file,
+    //required Uint8List file,
   }) async {
-    String res = "Some error Occurred";
+    String response = "Some error Occurred";
     try {
       if (email.isNotEmpty ||
           password.isNotEmpty ||
-          username.isNotEmpty ||
-          bio.isNotEmpty ||
-          file != null) {
-        // registering user in auth with email and password
-        UserCredential cred = await _auth.createUserWithEmailAndPassword(
+          username.isNotEmpty /* file != null */) {
+        // register user
+        UserCredential userCredentials =
+            await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
 
-        String photoUrl = await StorageMethods()
+        /* String photoUrl = await StorageMethods()
             .uploadImageToStorage('profilePics', file, false);
 
         model.User user = model.User(
           username: username,
-          uid: cred.user!.uid,
+          userId: userCredentials.user!.uid,
           photoUrl: photoUrl,
           email: email,
-        );
+        ); */
 
         // adding user in our database
-        await _firestore
-            .collection("users")
-            .doc(cred.user!.uid)
-            .set(user.toJson());
+        await _firestore.collection("users").doc(userCredentials.user!.uid).set(
+            //user.toJson(),
+            {
+              'username': username,
+              'user_id': userCredentials.user!.uid,
+              'email': email,
+            });
 
-        res = "success";
+        response = "success";
       } else {
-        res = "Please enter all the fields";
+        response = "Please enter all the fields";
       }
     } catch (err) {
       return err.toString();
     }
-    return res;
+    return response;
   }
 
   // logging in user
@@ -71,7 +72,7 @@ class AuthMethods {
     required String email,
     required String password,
   }) async {
-    String res = "Some error Occurred";
+    String response = "Some error Occurred";
     try {
       if (email.isNotEmpty || password.isNotEmpty) {
         // logging in user with email and password
@@ -79,14 +80,14 @@ class AuthMethods {
           email: email,
           password: password,
         );
-        res = "success";
+        response = "success";
       } else {
-        res = "Please enter all the fields";
+        response = "Please enter all the fields";
       }
     } catch (err) {
       return err.toString();
     }
-    return res;
+    return response;
   }
 
   Future<void> signOut() async {
