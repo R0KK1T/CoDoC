@@ -50,7 +50,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (context.mounted) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => const MyHomePage(title: 'Gruppen'),
+            builder: (context) => MyHomePage(
+              title: 'Hej',
+            ),
           ),
         );
       }

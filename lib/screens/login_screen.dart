@@ -1,4 +1,5 @@
 import 'package:codoc/screens/signup_screen.dart';
+import 'package:codoc/screens/feed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import '../firebase/firebase_options.dart';
@@ -66,7 +67,10 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
       debugPrint("Successfully logged in");
       if (context.mounted) {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => PlaceholderWidget()),
+            MaterialPageRoute(
+                builder: (context) => MyHomePage(
+                      title: 'abcde',
+                    )),
             (route) => false);
 
         setState(() {
@@ -99,7 +103,7 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
                   fontWeight: FontWeight.w300,
                 ),
               ),
-            
+
               //Email
               Padding(
                 padding: const EdgeInsets.only(
@@ -196,42 +200,3 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
   }
 }
 
-class PlaceholderWidget extends StatefulWidget {
-  const PlaceholderWidget({Key? key}) : super(key: key);
-
-  @override
-  State<PlaceholderWidget> createState() => _PlaceholderWidgetState();
-}
-
-class _PlaceholderWidgetState extends State<PlaceholderWidget> {
-  int _page = 0;
-  late PageController pageController; // for tabs animation
-
-  @override
-  void initState() {
-    super.initState();
-    pageController = PageController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    pageController.dispose();
-  }
-
-  void onPageChanged(int page) {
-    setState(() {
-      _page = page;
-    });
-  }
-
-  void navigationTapped(int page) {
-    //Animating Page
-    pageController.jumpToPage(page);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold();
-  }
-}
