@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:codoc/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:codoc/screens/upload_post_screen.dart';
 import 'package:codoc/firebase/firebase_storage.dart';
@@ -39,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 16.0),
+              padding: const EdgeInsets.only(top: 32.0),
               child: ListTile(
                 title: const Text(
                   "Groups",
@@ -103,7 +104,6 @@ class _MyHomePageState extends State<MyHomePage> {
         slivers: [
           SliverAppBar(
             title: const Text('CODOC'),
-            backgroundColor: Colors.lightGreen,
             centerTitle: true,
             pinned: true,
             actions: <Widget>[
@@ -144,19 +144,23 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-          SliverGrid(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: selection.first == ViewType.listView ? 1 : 3,
-              childAspectRatio: 1.0,
-              crossAxisSpacing: 5.0,
-              mainAxisSpacing: 1.5,
-              mainAxisExtent: selection.first == ViewType.listView ? 500 : 135,
-            ),
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return createCard(selection.first, imagePaths);
-              },
-              childCount: 40,
+          SliverPadding(
+            padding: selection.first == ViewType.listView ? EdgeInsets.all(16.0) : EdgeInsets.all(0.0) ,
+            sliver: SliverGrid(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: selection.first == ViewType.listView ? 1 : 3,
+                childAspectRatio: 1.0,
+                crossAxisSpacing: 1.0,
+                mainAxisSpacing: selection.first == ViewType.listView ? verticalPadding : 1.5,
+                mainAxisExtent:
+                    selection.first == ViewType.listView ? 500 : 135,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return createCard(selection.first, imagePaths);
+                },
+                childCount: 40,
+              ),
             ),
           ),
         ],
@@ -198,7 +202,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(right: horizontalPadding, top: horizontalPadding),
+              padding: EdgeInsets.only(
+                  right: horizontalPadding, top: horizontalPadding),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -209,9 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text('Cancel'),
                   ),
                   TextButton(
-                    onPressed: () {
-                      
-                    },
+                    onPressed: () {},
                     child: Text('Create'),
                   ),
                 ],
@@ -269,6 +272,7 @@ class GridViewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 1),
       width: 200,
       height: 200,
       child: GridView.count(
