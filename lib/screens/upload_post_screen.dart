@@ -47,7 +47,7 @@ class _MyUploadPageState extends State<MyUploadPage> {
       body: Center(
         child: SingleChildScrollView(
           child: Column(children: <Widget>[
-            _photo(),
+            postChoosePhotoFromGallery(),
             Padding(padding: EdgeInsets.only(bottom: 26)),
 
 // --------- Add more than one photo ---------
@@ -124,28 +124,30 @@ class _MyUploadPageState extends State<MyUploadPage> {
     );
   }
 
-  Widget _photo() {
+  Widget postChoosePhotoFromGallery() {
     return Stack(
       children: <Widget>[
         Container(
-            child: _image != null
-                ? Container(
-                    height: 250,
-                    width: 340,
-                    decoration: BoxDecoration(
-                      // borderRadius: BorderRadius.circular(12),
-                      image: DecorationImage(
-                        image: MemoryImage(_image!),
-                        fit: BoxFit.cover,
-                      ),
+          child: _image != null
+              ? Container(
+                  height: 250,
+                  width: 340,
+                  decoration: BoxDecoration(
+                    // borderRadius: BorderRadius.circular(12),
+                    image: DecorationImage(
+                      image: MemoryImage(_image!),
+                      fit: BoxFit.cover,
                     ),
-                  )
-                : uploadImageButton()),
+                  ),
+                )
+              : postUploadImageButton(),
+        ),
       ],
     );
   }
 
-  Container uploadImageButton() {
+  Container postUploadImageButton() {
+    
     return Container(
       height: 250,
       width: 340,
@@ -157,8 +159,12 @@ class _MyUploadPageState extends State<MyUploadPage> {
           builder: (BuildContext context) => SimpleDialog(
             children: <Widget>[
               SimpleDialogOption(
-                onPressed: () {
-                  debugPrint("takes pic");
+                onPressed: () async {
+                  Navigator.pop(context);
+                  Uint8List image = await pickImage(ImageSource.camera);
+                  setState(() {
+                    _image = image;
+                  });
                 },
                 child: const Text('Take picture'),
               ),
