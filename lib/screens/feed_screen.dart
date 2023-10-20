@@ -3,9 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:codoc/screens/upload_post_screen.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  final String groupName;
+  final String groupId;
 
-  final String title;
+  const MyHomePage({
+    super.key,
+    required this.groupName,
+    required this.groupId,
+  });
+
   //final List<String> imagePaths;
 
   @override
@@ -19,6 +25,16 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> imagePaths = [
     'assets/images/documentation_example.PNG',
     'assets/images/documentation_example_2.png',
+  ];
+
+  List<String> groupNames = [
+    'CLS055 GROUP 13',
+    'CLS055 GROUP 13',
+    'CLS055 GROUP 13',
+    'CLS055 GROUP 13',
+    'CLA123 GROUP 2',
+    'CLA123 GROUP 4',
+    'CLA123 GROUP 8',
   ];
 
   @override
@@ -39,25 +55,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Expanded(
-              child: ListView(
+              child: ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                children: [
-                  ListTile(
-                    title: const Text('CIU765 Group 13'),
-                    onTap: () {
-                      // Update the state of the app.
-                      // ...
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('CLA153 Group 13'),
-                    onTap: () {
-                      // Update the state of the app.
-                      // ...
-                    },
-                  ),
-                ],
+                itemCount: groupNames.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListViewGroupTile(groupName: groupNames[index]);
+                },
               ),
             ),
             Divider(
@@ -168,6 +172,27 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Create post',
         child: const Icon(Icons.add),
       ),
+    );
+  }
+}
+
+class ListViewGroupTile extends StatelessWidget {
+  final String groupName;
+
+  const ListViewGroupTile({
+    super.key,
+    required this.groupName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(
+        groupName,
+      ),
+      onTap: () {
+        // TODO: navigate to the corresponding group
+      },
     );
   }
 }

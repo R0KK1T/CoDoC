@@ -70,7 +70,8 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
                 builder: (context) => MyHomePage(
-                      title: 'abcde',
+                
+                      groupName: 'abcde', groupId: '123',
                     )),
             (route) => false);
 
@@ -200,4 +201,3 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
     );
   }
 }
-
