@@ -48,6 +48,7 @@ const double verticalPadding = 24;
 class _MyLoginScreenState extends State<MyLoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  // ignore: unused_field
   bool _isLoading = false;
 
   @override
