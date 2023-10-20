@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:codoc/screens/upload_post_screen.dart';
+import 'package:codoc/firebase/firebase_storage.dart';
 
 class MyHomePage extends StatefulWidget {
   final String groupName;
@@ -27,15 +28,9 @@ class _MyHomePageState extends State<MyHomePage> {
     'assets/images/documentation_example_2.png',
   ];
 
-  List<String> groupNames = [
-    'CLS055 GROUP 13',
-    'CLS055 GROUP 13',
-    'CLS055 GROUP 13',
-    'CLS055 GROUP 13',
-    'CLA123 GROUP 2',
-    'CLA123 GROUP 4',
-    'CLA123 GROUP 8',
-  ];
+  final double horizontalPadding = 24;
+
+  List<String> groupNames = [];
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ListTile(
               title: const Text(
-                'Add project log',
+                'Add group',
                 style: TextStyle(fontSize: 12),
               ),
               leading: Icon(
@@ -111,6 +106,14 @@ class _MyHomePageState extends State<MyHomePage> {
             backgroundColor: Colors.lightGreen,
             centerTitle: true,
             pinned: true,
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  _showAddDialog(context);
+                },
+              ),
+            ],
           ),
           SliverToBoxAdapter(
             child: Column(
@@ -172,6 +175,51 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Create post',
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  void _showAddDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: Text('Create new group'), // Customize dialog title as needed
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(
+                right: horizontalPadding,
+                left: horizontalPadding,
+              ),
+              child: TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Group name',
+                  hintText: 'Write group name',
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: horizontalPadding, top: horizontalPadding),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      
+                    },
+                    child: Text('Create'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -40,14 +40,16 @@ class StorageMethods {
 
   Future storageCreateGroup(
       String username, String id, String groupName) async {
-    DocumentReference groupDocumentReference = await groupCollection.add({
-      "groupName": groupName,
-      "groupIcon": "",
-      "admin": "${id}_$username",
-      "members": [],
-      "groupId": "",
-      "recentMessage": "",
-    });
+    DocumentReference groupDocumentReference = await groupCollection.add(
+      {
+        "groupName": groupName,
+        "groupIcon": "",
+        "admin": "${id}_$username",
+        "members": [],
+        "groupId": "",
+        "recentMessage": "",
+      },
+    );
     // update group members
     await groupDocumentReference.update({
       "members": FieldValue.arrayUnion(["${uid}_$username"]),
@@ -67,6 +69,10 @@ class StorageMethods {
         .collection("posts")
         .orderBy("time")
         .snapshots();
+  }
+
+  storageGetUserGroups() async {
+    return userCollection.doc(uid).snapshots();
   }
 
   storageGetGroupMembers(groupId) async {
@@ -121,5 +127,4 @@ class StorageMethods {
       "recentMessageTime": postData['time'].toString(),
     });
   }
-
 }
