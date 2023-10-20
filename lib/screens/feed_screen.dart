@@ -2,11 +2,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title, required this.imagePaths});
+  const MyHomePage({super.key, required this.title});
 
   final String title;
-
-  final List<String> imagePaths;
+  //final List<String> imagePaths;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -58,7 +57,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                   ),
                 ],
-
               ),
             ),
             Divider(
