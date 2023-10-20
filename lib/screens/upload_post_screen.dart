@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+import 'package:codoc/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MyUploadPage extends StatefulWidget {
   const MyUploadPage({super.key, required this.title});
@@ -12,6 +15,7 @@ class _MyUploadPageState extends State<MyUploadPage> {
   TextEditingController controllerTitle = TextEditingController();
   TextEditingController controllerDescription = TextEditingController();
   bool isButtonEnabled = false;
+  Uint8List? _image;
 
   @override
   void initState() {
@@ -21,6 +25,15 @@ class _MyUploadPageState extends State<MyUploadPage> {
         isButtonEnabled = controllerTitle.text.isNotEmpty;
       });
     });
+  }
+
+  selectImage() async {
+    Uint8List im = await pickImage(ImageSource.gallery);
+    setState(
+      () {
+        _image = im;
+      },
+    );
   }
 
   @override
@@ -111,21 +124,28 @@ class _MyUploadPageState extends State<MyUploadPage> {
     );
   }
 
-  Container _photo() {
-    // bool isPicture = false;
-    // if (isPicture) {
-    //   return Container(
-    //     height: 250,
-    //     width: 340,
-    //     decoration: BoxDecoration(
-    //       // borderRadius: BorderRadius.circular(12),
-    //       image: DecorationImage(
-    //         image: AssetImage('assets/images/IMG_2649.jpg'),
-    //         fit: BoxFit.cover,
-    //       ),
-    //     ),
-    //   );
-    // } else {
+  Widget _photo() {
+    return Stack(
+      children: <Widget>[
+        Container(
+            child: _image != null
+                ? Container(
+                    height: 250,
+                    width: 340,
+                    decoration: BoxDecoration(
+                      // borderRadius: BorderRadius.circular(12),
+                      image: DecorationImage(
+                        image: MemoryImage(_image!),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  )
+                : uploadImageButton()),
+      ],
+    );
+  }
+
+  Container uploadImageButton() {
     return Container(
       height: 250,
       width: 340,
@@ -143,9 +163,7 @@ class _MyUploadPageState extends State<MyUploadPage> {
                 child: const Text('Take picture'),
               ),
               SimpleDialogOption(
-                onPressed: () {
-                  debugPrint("from gallery");
-                },
+                onPressed: selectImage,
                 child: const Text('Choose from gallery'),
               ),
             ],
@@ -154,6 +172,5 @@ class _MyUploadPageState extends State<MyUploadPage> {
         // child: const Text('Show Dialog'),
       ),
     );
-    // }
   }
 }

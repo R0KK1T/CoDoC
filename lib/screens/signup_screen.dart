@@ -1,9 +1,7 @@
 import 'dart:typed_data';
-
 import 'package:codoc/firebase/firebase_authentication.dart';
 import 'package:codoc/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:codoc/screens/feed_screen.dart';
 
@@ -84,7 +82,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-//CoDoC
+              //CoDoC
               Text(
                 'CoDoc',
                 style: TextStyle(
@@ -92,8 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   fontWeight: FontWeight.w300,
                 ),
               ),
-
-// Email
+              // Email
               Stack(
                 children: [
                   _image != null
