@@ -46,6 +46,7 @@ class AuthMethods {
           userId: userCredentials.user!.uid,
           photoUrl: photoUrl,
           email: email,
+          groupIds: []
         );
 
         // adding user in our database

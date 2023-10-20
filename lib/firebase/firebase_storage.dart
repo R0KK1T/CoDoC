@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
@@ -7,6 +8,13 @@ import 'package:uuid/uuid.dart';
 class StorageMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+
+  // reference for our collections
+  final CollectionReference userCollection =
+      FirebaseFirestore.instance.collection("users");
+  final CollectionReference groupCollection =
+      FirebaseFirestore.instance.collection("groups");
+
 
   // adding image to firebase storage
   Future<String> uploadImageToStorage(String childName, Uint8List file, bool isPost) async {
