@@ -3,6 +3,7 @@ import 'package:codoc/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:codoc/screens/upload_post_screen.dart';
 import 'package:codoc/firebase/firebase_storage.dart';
+import 'package:codoc/screens/settings_screen.dart';
 
 class MyHomePage extends StatefulWidget {
   final String groupName;
@@ -88,8 +89,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 size: 18,
               ),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MySettingsPage(),
+                  ),
+                );
               },
             ),
           ],
@@ -145,13 +150,17 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           SliverPadding(
-            padding: selection.first == ViewType.listView ? EdgeInsets.all(16.0) : EdgeInsets.all(0.0) ,
+            padding: selection.first == ViewType.listView
+                ? EdgeInsets.all(16.0)
+                : EdgeInsets.all(0.0),
             sliver: SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: selection.first == ViewType.listView ? 1 : 3,
                 childAspectRatio: 1.0,
                 crossAxisSpacing: 1.0,
-                mainAxisSpacing: selection.first == ViewType.listView ? verticalPadding : 1.5,
+                mainAxisSpacing: selection.first == ViewType.listView
+                    ? verticalPadding
+                    : 1.5,
                 mainAxisExtent:
                     selection.first == ViewType.listView ? 500 : 135,
               ),
