@@ -55,8 +55,13 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  String getGroupName(String name) {
+    return name.substring(name.indexOf("_") + 1);
+  }
+
   @override
   Widget build(BuildContext context) {
+    gettingUserData();
     return Scaffold(
       drawer: Drawer(
         child: Column(
@@ -73,14 +78,24 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: groupNames.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListViewGroupTile(groupName: groupNames[index]);
-                },
-              ),
+              child: StreamBuilder(
+                  stream: groups,
+                  builder: (context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: snapshot.data['groups'].length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ListViewGroupTile(
+                              groupName:
+                                  getGroupName(snapshot.data['groups'][index]));
+                        },
+                      );
+                    } else {
+                      return Container();
+                    }
+                  }),
             ),
             Divider(
               indent: 16,
