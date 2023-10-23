@@ -1,9 +1,12 @@
 import 'dart:math';
 import 'package:codoc/screens/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:codoc/screens/upload_post_screen.dart';
 import 'package:codoc/firebase/firebase_storage.dart';
+import 'package:codoc/firebase/firebase_authentication.dart';
 import 'package:codoc/screens/settings_screen.dart';
+import 'package:codoc/utils/utils.dart';
 
 class MyHomePage extends StatefulWidget {
   final String groupName;
@@ -31,8 +34,26 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   final double horizontalPadding = 24;
+  TextEditingController groupNameTextController = TextEditingController();
 
   List<String> groupNames = [];
+  bool _isLoading = false;
+  String groupName = "";
+  String userName = "";
+  String email = "";
+  AuthMethods authService = AuthMethods();
+  Stream? groups;
+
+  gettingUserData() async {
+    // getting the list of snapshots in our stream
+    await StorageMethods(uid: FirebaseAuth.instance.currentUser!.uid)
+        .storageGetUserGroups()
+        .then((snapshot) {
+      setState(() {
+        groups = snapshot;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ListTile(
               title: const Text(
-                'Add group',
+                'Create group',
                 style: TextStyle(fontSize: 12),
               ),
               leading: Icon(
@@ -76,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               onTap: () {
                 // Update the state of the app.
-                // ...
+                _showAddDialog(context);
               },
             ),
             ListTile(
@@ -115,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
               IconButton(
                 icon: Icon(Icons.add),
                 onPressed: () {
-                  _showAddDialog(context);
+                  //_showAddDialog(context);
                 },
               ),
             ],
@@ -204,6 +225,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 left: horizontalPadding,
               ),
               child: TextFormField(
+                controller: groupNameTextController,
                 decoration: const InputDecoration(
                   labelText: 'Group name',
                   hintText: 'Write group name',
@@ -223,7 +245,24 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text('Cancel'),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      groupName = groupNameTextController.text;
+                      if (groupName != "") {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        StorageMethods(
+                                uid: FirebaseAuth.instance.currentUser!.uid)
+                            .storageCreateGroup(
+                                FirebaseAuth.instance.currentUser!.uid,
+                                groupName)
+                            .whenComplete(() {
+                          _isLoading = false;
+                        });
+                        Navigator.of(context).pop();
+                        showSnackBar(context, "Group created successfully.");
+                      }
+                    },
                     child: Text('Create'),
                   ),
                 ],

@@ -39,12 +39,12 @@ class StorageMethods {
   }
 
   Future storageCreateGroup(
-      String username, String id, String groupName) async {
+      /*String username, */ String id, String groupName) async {
     DocumentReference groupDocumentReference = await groupCollection.add(
       {
         "groupName": groupName,
         "groupIcon": "",
-        "admin": "${id}_$username",
+        "admin": id,
         "members": [],
         "groupId": "",
         "recentMessage": "",
@@ -52,7 +52,7 @@ class StorageMethods {
     );
     // update group members
     await groupDocumentReference.update({
-      "members": FieldValue.arrayUnion(["${uid}_$username"]),
+      "members": FieldValue.arrayUnion([uid]),
       "groupId": groupDocumentReference.id,
     });
 
