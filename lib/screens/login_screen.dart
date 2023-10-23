@@ -48,6 +48,7 @@ const double verticalPadding = 24;
 class _MyLoginScreenState extends State<MyLoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  // ignore: unused_field
   bool _isLoading = false;
 
   @override
@@ -69,7 +70,8 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
                 builder: (context) => MyHomePage(
-                      title: 'abcde',
+                
+                      groupName: 'abcde', groupId: '123',
                     )),
             (route) => false);
 
@@ -199,4 +201,3 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
     );
   }
 }
-

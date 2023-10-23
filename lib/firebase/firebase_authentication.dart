@@ -26,11 +26,12 @@ class AuthMethods {
     required String username,
     required Uint8List file,
   }) async {
-    String response = "Some error Occurred";
+    String responseFromFirebase = "Some error Occurred";
     try {
       if (email.isNotEmpty ||
           password.isNotEmpty ||
-          username.isNotEmpty || file != null) {
+          username.isNotEmpty ||
+          file != null) {
         // register user
         UserCredential userCredentials =
             await _auth.createUserWithEmailAndPassword(
@@ -39,34 +40,35 @@ class AuthMethods {
         );
 
         String photoUrl = await StorageMethods()
-            .uploadImageToStorage('profilePics', file, false);
+            .storageUploadImage('profilePics', file, false);
 
         model.User user = model.User(
-          username: username,
-          userId: userCredentials.user!.uid,
-          photoUrl: photoUrl,
-          email: email,
-        );
+            username: username,
+            userId: userCredentials.user!.uid,
+            photoUrl: photoUrl,
+            email: email,
+            groupIds: []);
 
         // adding user in our database
         await _firestore.collection("users").doc(userCredentials.user!.uid).set(
-            user.toJson(),
-            /* {
+              user.toJson(),
+              /* {
               'username': username,
               'user_id': userCredentials.user!.uid,
               'photoUrl'
               'email': email,
 
-            } */);
+            } */
+            );
 
-        response = "success";
+        responseFromFirebase = "success";
       } else {
-        response = "Please enter all the fields";
+        responseFromFirebase = "Please enter all the fields";
       }
     } catch (err) {
       return err.toString();
     }
-    return response;
+    return responseFromFirebase;
   }
 
   // logging in user

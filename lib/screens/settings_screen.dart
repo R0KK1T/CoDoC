@@ -1,8 +1,8 @@
+import 'package:codoc/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class MySettingsPage extends StatefulWidget {
-  const MySettingsPage({super.key, required this.title});
-  final String title;
+  const MySettingsPage({super.key});
 
   @override
   State<MySettingsPage> createState() => _MySettingsPageState();
@@ -39,7 +39,9 @@ class _MySettingsPageState extends State<MySettingsPage> {
                 value: light,
                 onChanged: (bool value) {
                   setState(() {
-                    light = value;
+                    //light = value;
+                  showSnackBar(context,
+                      'You have to be a member of CoLog Premium to use this feature');
                   });
                 },
               ),

@@ -1,10 +1,20 @@
 import 'dart:math';
+import 'package:codoc/screens/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:codoc/screens/upload_post_screen.dart';
+import 'package:codoc/firebase/firebase_storage.dart';
+import 'package:codoc/screens/settings_screen.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  final String groupName;
+  final String groupId;
 
-  final String title;
+  const MyHomePage({
+    super.key,
+    required this.groupName,
+    required this.groupId,
+  });
+
   //final List<String> imagePaths;
 
   @override
@@ -20,6 +30,10 @@ class _MyHomePageState extends State<MyHomePage> {
     'assets/images/documentation_example_2.png',
   ];
 
+  final double horizontalPadding = 24;
+
+  List<String> groupNames = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 16.0),
+              padding: const EdgeInsets.only(top: 32.0),
               child: ListTile(
                 title: const Text(
                   "Groups",
@@ -38,25 +52,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Expanded(
-              child: ListView(
+              child: ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                children: [
-                  ListTile(
-                    title: const Text('CIU765 Group 13'),
-                    onTap: () {
-                      // Update the state of the app.
-                      // ...
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('CLA153 Group 13'),
-                    onTap: () {
-                      // Update the state of the app.
-                      // ...
-                    },
-                  ),
-                ],
+                itemCount: groupNames.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListViewGroupTile(groupName: groupNames[index]);
+                },
               ),
             ),
             Divider(
@@ -65,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ListTile(
               title: const Text(
-                'Add project log',
+                'Add group',
                 style: TextStyle(fontSize: 12),
               ),
               leading: Icon(
@@ -87,8 +89,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 size: 18,
               ),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MySettingsPage(),
+                  ),
+                );
               },
             ),
           ],
@@ -103,9 +109,16 @@ class _MyHomePageState extends State<MyHomePage> {
         slivers: [
           SliverAppBar(
             title: const Text('CODOC'),
-            backgroundColor: Colors.lightGreen,
             centerTitle: true,
             pinned: true,
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  _showAddDialog(context);
+                },
+              ),
+            ],
           ),
           SliverToBoxAdapter(
             child: Column(
@@ -136,28 +149,110 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-          SliverGrid(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: selection.first == ViewType.listView ? 1 : 3,
-              childAspectRatio: 1.0,
-              crossAxisSpacing: 5.0,
-              mainAxisSpacing: 1.5,
-              mainAxisExtent: selection.first == ViewType.listView ? 500 : 135,
-            ),
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return createCard(selection.first, imagePaths);
-              },
-              childCount: 40,
+          SliverPadding(
+            padding: selection.first == ViewType.listView
+                ? EdgeInsets.all(16.0)
+                : EdgeInsets.all(0.0),
+            sliver: SliverGrid(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: selection.first == ViewType.listView ? 1 : 3,
+                childAspectRatio: 1.0,
+                crossAxisSpacing: 1.0,
+                mainAxisSpacing: selection.first == ViewType.listView
+                    ? verticalPadding
+                    : 1.5,
+                mainAxisExtent:
+                    selection.first == ViewType.listView ? 500 : 135,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return createCard(selection.first, imagePaths);
+                },
+                childCount: 40,
+              ),
             ),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MyUploadPage(
+                title: 'Upload',
+              ),
+            ),
+          );
+        },
         tooltip: 'Create post',
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  void _showAddDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: Text('Create new group'), // Customize dialog title as needed
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(
+                right: horizontalPadding,
+                left: horizontalPadding,
+              ),
+              child: TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Group name',
+                  hintText: 'Write group name',
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                  right: horizontalPadding, top: horizontalPadding),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: Text('Create'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class ListViewGroupTile extends StatelessWidget {
+  final String groupName;
+
+  const ListViewGroupTile({
+    super.key,
+    required this.groupName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(
+        groupName,
+      ),
+      onTap: () {
+        // TODO: navigate to the corresponding group
+      },
     );
   }
 }
@@ -186,6 +281,7 @@ class GridViewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 1),
       width: 200,
       height: 200,
       child: GridView.count(

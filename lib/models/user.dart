@@ -5,12 +5,14 @@ class User {
   final String userId;
   final String photoUrl;
   final String username;
+  final List<String> groupIds;
 
   const User({
     required this.username,
     required this.userId,
     required this.photoUrl,
     required this.email,
+    required this.groupIds,
   });
 
   static User fromSnap(DocumentSnapshot snap) {
@@ -21,6 +23,7 @@ class User {
       userId: snapshot["uid"],
       email: snapshot["email"],
       photoUrl: snapshot["photoUrl"],
+      groupIds: List<String>.from(snapshot["groupIds"] ?? []),
     );
   }
 
@@ -29,5 +32,6 @@ class User {
         "uid": userId,
         "email": email,
         "photoUrl": photoUrl,
+        "groupIds": groupIds,
       };
 }
