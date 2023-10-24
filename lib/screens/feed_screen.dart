@@ -38,9 +38,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<String> groupNames = [];
   bool _isLoading = false;
-  String groupName = "";
-  String userName = "";
-  String email = "";
   AuthMethods authService = AuthMethods();
   Stream? groups;
 
@@ -53,6 +50,10 @@ class _MyHomePageState extends State<MyHomePage> {
         groups = snapshot;
       });
     });
+  }
+
+  String getGroupId(String name) {
+    return name.substring(0, name.indexOf("_"));
   }
 
   String getGroupName(String name) {
@@ -88,8 +89,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         itemCount: snapshot.data['groups'].length,
                         itemBuilder: (BuildContext context, int index) {
                           return ListViewGroupTile(
-                              groupName:
-                                  getGroupName(snapshot.data['groups'][index]));
+                            groupName: getGroupName(
+                              snapshot.data['groups'][index],
+                            ),
+                            groupId: getGroupId(
+                              snapshot.data['groups'][index],
+                            ),
+                          );
                         },
                       );
                     } else {
@@ -144,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            title: const Text('CODOC'),
+            title: Text(widget.groupName),
             centerTitle: true,
             pinned: true,
             actions: <Widget>[
@@ -228,6 +234,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _showAddDialog(BuildContext context) {
+    String createNewGroupName = "";
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -261,8 +269,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   TextButton(
                     onPressed: () async {
-                      groupName = groupNameTextController.text;
-                      if (groupName != "") {
+                      createNewGroupName = groupNameTextController.text;
+                      if (createNewGroupName != "") {
                         setState(() {
                           _isLoading = true;
                         });
@@ -270,7 +278,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 uid: FirebaseAuth.instance.currentUser!.uid)
                             .storageCreateGroup(
                                 FirebaseAuth.instance.currentUser!.uid,
-                                groupName)
+                                createNewGroupName)
                             .whenComplete(() {
                           _isLoading = false;
                         });
@@ -292,11 +300,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class ListViewGroupTile extends StatelessWidget {
   final String groupName;
+  final String groupId;
 
   const ListViewGroupTile({
-    super.key,
+    Key? key, // Add the 'key' parameter here
     required this.groupName,
-  });
+    required this.groupId,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -306,6 +316,13 @@ class ListViewGroupTile extends StatelessWidget {
       ),
       onTap: () {
         // TODO: navigate to the corresponding group
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) =>
+                MyHomePage(groupName: groupName, groupId: groupId),
+          ),
+          (route) => false,
+        );
       },
     );
   }
