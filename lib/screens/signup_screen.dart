@@ -17,6 +17,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   Uint8List? _image;
+  // ignore: unused_field
   bool _isLoading = false;
 
   @override
@@ -34,7 +35,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
 
     // signup user using our authmethodds
-    String res = await AuthMethods().signUpUser(
+    String res = await AuthMethods().authUserSignUp(
         email: _emailController.text,
         password: _passwordController.text,
         username: _usernameController.text,

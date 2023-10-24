@@ -20,7 +20,7 @@ class AuthMethods {
 
   // Signing Up User
 
-  Future<String> signUpUser({
+  Future<String> authUserSignUp({
     required String email,
     required String password,
     required String username,
@@ -73,7 +73,7 @@ class AuthMethods {
   }
 
   // logging in user
-  Future<String> loginUser({
+  Future<String> authUserSignIn({
     required String email,
     required String password,
   }) async {
@@ -95,7 +95,7 @@ class AuthMethods {
     return response;
   }
 
-  Future<void> signOut() async {
+  Future<void> authUserSignOut() async {
     await _auth.signOut();
   }
 }

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:codoc/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -157,6 +156,25 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
+            ListTile(
+              title: const Text(
+                'Sign out',
+                style: TextStyle(fontSize: 12),
+              ),
+              leading: Icon(
+                Icons.logout,
+                size: 18,
+              ),
+              onTap: () {
+                authService.authUserSignOut();
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: ((context) => const MyLoginScreen()),
+                  ),
+                  (route) => false,
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -172,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       pinned: true,
                       actions: <Widget>[
                         IconButton(
-                          icon: Icon(Icons.add),
+                          icon: Icon(Icons.three_g_mobiledata),
                           onPressed: () {
                             //_showAddDialog(context);
                           },
@@ -254,7 +272,7 @@ class _MyHomePageState extends State<MyHomePage> {
             context,
             MaterialPageRoute(
               builder: (context) => MyUploadPage(
-                title: 'Upload', groupId: widget.groupId,
+                groupId: widget.groupId,
               ),
             ),
           );
@@ -351,7 +369,6 @@ class ListViewGroupTile extends StatelessWidget {
         groupName,
       ),
       onTap: () {
-        // TODO: navigate to the corresponding group
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (context) =>
@@ -444,7 +461,7 @@ class ListViewCard extends StatelessWidget {
             padding: const EdgeInsets.only(left: 8),
             child: Text(
               DateFormat(
-                'dd MMM yyyy',
+                'dd MMM yyyy HH:mm',
               ).format(
                 DateTime.fromMillisecondsSinceEpoch(
                   post.data()["datePublished"],

@@ -67,7 +67,7 @@ class StorageMethods {
     return groupCollection
         .doc(groupId)
         .collection("posts")
-        .orderBy("datePublished")
+        .orderBy("datePublished", descending: true)
         .snapshots();
   }
 

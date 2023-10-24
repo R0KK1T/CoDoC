@@ -5,12 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:codoc/firebase/firebase_storage.dart';
-import 'package:codoc/firebase/firebase_authentication.dart';
 import 'package:uuid/uuid.dart';
 
 class MyUploadPage extends StatefulWidget {
-  const MyUploadPage({super.key, required this.title, required this.groupId});
-  final String title;
+  const MyUploadPage({super.key, required this.groupId});
   final String groupId;
 
   @override
@@ -192,7 +190,7 @@ class _MyUploadPageState extends State<MyUploadPage> {
         postUrl: photoUrl,
       );
 
-     // String temporaryGroupId = "Yaa8GbfJiJ8uGxQzq2qO";
+      // String temporaryGroupId = "Yaa8GbfJiJ8uGxQzq2qO";
       StorageMethods(uid: FirebaseAuth.instance.currentUser!.uid)
           .storageCreatePost(
         widget.groupId,
@@ -217,13 +215,13 @@ class _MyUploadPageState extends State<MyUploadPage> {
             children: <Widget>[
               SimpleDialogOption(
                 onPressed: () async {
-                  Navigator.pop(context);
                   Uint8List image = await insertImage(ImageSource.camera);
                   setState(
                     () {
                       _image = image;
                     },
                   );
+                  Navigator.pop(context);
                 },
                 child: const Text('Take picture'),
               ),

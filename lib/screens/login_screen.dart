@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import '../firebase/firebase_options.dart';
 import 'package:codoc/firebase/firebase_authentication.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:codoc/utils/utils.dart';
 
 void main() async {
@@ -62,7 +61,7 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
     setState(() {
       _isLoading = true;
     });
-    String authenticationResponse = await AuthMethods().loginUser(
+    String authenticationResponse = await AuthMethods().authUserSignIn(
         email: _emailController.text, password: _passwordController.text);
     if (authenticationResponse == 'success') {
       debugPrint("Successfully logged in");
@@ -70,8 +69,8 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
                 builder: (context) => MyHomePage(
-                
-                      groupName: 'abcde', groupId: '123',
+                      groupName: 'abcde',
+                      groupId: '123',
                     )),
             (route) => false);
 
@@ -187,7 +186,7 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
                   textStyle: const TextStyle(fontSize: 15),
                 ),
                 onPressed: () {
-                  print('Signin button tapped'); //Debugger
+                  debugPrint('Signin button tapped'); //Debugger
 
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => SignUpScreen()));
