@@ -49,7 +49,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => MyHomePage(
-              groupName: 'Hej', groupId: '',
+              groupName: 'Hej',
+              groupId: '',
             ),
           ),
         );
@@ -66,7 +67,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   selectImage() async {
-    Uint8List im = await pickImage(ImageSource.gallery);
+    Uint8List im = await insertImage(ImageSource.gallery);
     // set state because we need to display the image we selected on the circle avatar
     setState(() {
       _image = im;

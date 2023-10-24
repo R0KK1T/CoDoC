@@ -233,7 +233,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           (context, index) {
                             debugPrint(snapshot.toString());
                             return createCard(
-                                selection.first, snapshot.data.docs[index]);
+                              selection.first,
+                              snapshot.data.docs[index],
+                            );
                           },
                           childCount: snapshot.data.docs.length,
                         ),
@@ -252,7 +254,7 @@ class _MyHomePageState extends State<MyHomePage> {
             context,
             MaterialPageRoute(
               builder: (context) => MyUploadPage(
-                title: 'Upload',
+                title: 'Upload', groupId: widget.groupId,
               ),
             ),
           );

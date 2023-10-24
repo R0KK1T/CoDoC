@@ -9,8 +9,9 @@ import 'package:codoc/firebase/firebase_authentication.dart';
 import 'package:uuid/uuid.dart';
 
 class MyUploadPage extends StatefulWidget {
-  const MyUploadPage({super.key, required this.title});
+  const MyUploadPage({super.key, required this.title, required this.groupId});
   final String title;
+  final String groupId;
 
   @override
   State<MyUploadPage> createState() => _MyUploadPageState();
@@ -33,10 +34,10 @@ class _MyUploadPageState extends State<MyUploadPage> {
   }
 
   selectImage() async {
-    Uint8List im = await pickImage(ImageSource.gallery);
+    Uint8List selectedImage = await insertImage(ImageSource.gallery);
     setState(
       () {
-        _image = im;
+        _image = selectedImage;
       },
     );
   }
@@ -119,10 +120,9 @@ class _MyUploadPageState extends State<MyUploadPage> {
       ),
       child: TextField(
         controller: controller,
-        obscureText: false,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
-          labelText: "Title*",
+          labelText: "Title",
         ),
       ),
     );
@@ -138,7 +138,6 @@ class _MyUploadPageState extends State<MyUploadPage> {
         maxLines: 3,
         maxLength: 140,
         controller: controller,
-        obscureText: false,
         decoration: InputDecoration(
           alignLabelWithHint: true,
           border: OutlineInputBorder(),
@@ -193,10 +192,10 @@ class _MyUploadPageState extends State<MyUploadPage> {
         postUrl: photoUrl,
       );
 
-      String temporaryGroupId = "Yaa8GbfJiJ8uGxQzq2qO";
+     // String temporaryGroupId = "Yaa8GbfJiJ8uGxQzq2qO";
       StorageMethods(uid: FirebaseAuth.instance.currentUser!.uid)
           .storageCreatePost(
-        temporaryGroupId,
+        widget.groupId,
         post.toJson(),
       );
       return "Great success <3";
@@ -219,7 +218,7 @@ class _MyUploadPageState extends State<MyUploadPage> {
               SimpleDialogOption(
                 onPressed: () async {
                   Navigator.pop(context);
-                  Uint8List image = await pickImage(ImageSource.camera);
+                  Uint8List image = await insertImage(ImageSource.camera);
                   setState(
                     () {
                       _image = image;
