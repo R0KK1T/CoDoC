@@ -1,5 +1,5 @@
-import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:codoc/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -441,7 +441,13 @@ class ListViewCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 8),
             child: Text(
-              '${post.data()["datePublished"]}',
+              DateFormat(
+                'dd MMM yyyy',
+              ).format(
+                DateTime.fromMillisecondsSinceEpoch(
+                  post.data()["datePublished"],
+                ),
+              ),
               //.toString(), //'date', //post["datePublished"].toString(),
               style: TextStyle(
                 fontSize: 16,

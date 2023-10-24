@@ -79,7 +79,7 @@ class _MyUploadPageState extends State<MyUploadPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: const [
-                    Text("Obligatory"),
+                    Text("Obligatory field"),
                   ],
                 ),
               ), //Align to left
@@ -173,7 +173,10 @@ class _MyUploadPageState extends State<MyUploadPage> {
   }
 
   Future<String> createPost(
-      String title, String description, Uint8List image) async {
+    String title,
+    String description,
+    Uint8List image,
+  ) async {
     try {
       String postId = const Uuid().v1();
       String photoUrl = await StorageMethods().storageUploadImage(
@@ -186,7 +189,7 @@ class _MyUploadPageState extends State<MyUploadPage> {
         uid: FirebaseAuth.instance.currentUser!.uid,
         title: title,
         postId: postId,
-        datePublished: DateTime.now().toString(),
+        datePublished: DateTime.now().millisecondsSinceEpoch,
         postUrl: photoUrl,
       );
 
