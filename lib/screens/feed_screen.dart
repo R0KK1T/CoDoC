@@ -39,21 +39,35 @@ class _MyHomePageState extends State<MyHomePage> {
   Stream? groups;
   Stream? groupPosts;
 
+  @override
+  void initState() {
+    super.initState();
+    gettingUserData();
+  }
+
   gettingUserData() async {
     // getting the list of snapshots in our stream
     await StorageMethods(uid: FirebaseAuth.instance.currentUser!.uid)
         .storageGetUserGroups()
-        .then((snapshot) {
-      setState(() {
-        groups = snapshot;
-      });
-    });
-    await StorageMethods().storageGetPosts(widget.groupId).then((snapshot) {
-      setState(() {
-        groupPosts = snapshot;
-        debugPrint(groupPosts.toString());
-      });
-    });
+        .then(
+      (snapshot) {
+        setState(
+          () {
+            groups = snapshot;
+          },
+        );
+      },
+    );
+    await StorageMethods().storageGetPosts(widget.groupId).then(
+      (snapshot) {
+        setState(
+          () {
+            groupPosts = snapshot;
+            debugPrint('*** ${groupPosts.toString()}');
+          },
+        );
+      },
+    );
   }
 
   String getGroupId(String name) {
@@ -66,7 +80,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    gettingUserData();
     return Scaffold(
       drawer: Drawer(
         child: Column(
@@ -84,28 +97,29 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Expanded(
               child: StreamBuilder(
-                  stream: groups,
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: snapshot.data['groups'].length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListViewGroupTile(
-                            groupName: getGroupName(
-                              snapshot.data['groups'][index],
-                            ),
-                            groupId: getGroupId(
-                              snapshot.data['groups'][index],
-                            ),
-                          );
-                        },
-                      );
-                    } else {
-                      return Container();
-                    }
-                  }),
+                stream: groups,
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: snapshot.data['groups'].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListViewGroupTile(
+                          groupName: getGroupName(
+                            snapshot.data['groups'][index],
+                          ),
+                          groupId: getGroupId(
+                            snapshot.data['groups'][index],
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
             ),
             Divider(
               indent: 16,
@@ -146,96 +160,92 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-
-      /* appBar: AppBar(
-        title: const Text('CODOC'),
-        centerTitle: true,
-      ), */
       body: StreamBuilder(
-          stream: groupPosts,
-          builder: (context, AsyncSnapshot snapshot) {
-            return snapshot.hasData
-                ? CustomScrollView(
-                    slivers: [
-                      SliverAppBar(
-                        title: Text(widget.groupName),
-                        centerTitle: true,
-                        pinned: true,
-                        actions: <Widget>[
-                          IconButton(
-                            icon: Icon(Icons.add),
-                            onPressed: () {
-                              //_showAddDialog(context);
-                            },
+        stream: groupPosts,
+        builder: (context, AsyncSnapshot snapshot) {
+          return snapshot.hasData
+              ? CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      title: Text(widget.groupName),
+                      centerTitle: true,
+                      pinned: true,
+                      actions: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () {
+                            //_showAddDialog(context);
+                          },
+                        ),
+                      ],
+                    ),
+                    SliverToBoxAdapter(
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(top: 24.0),
+                            child:
+                                Icon(Icons.family_restroom_rounded, size: 96),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SegmentedButton(
+                              segments: const <ButtonSegment<ViewType>>[
+                                ButtonSegment(
+                                  value: ViewType.listView,
+                                  icon: Icon(Icons.view_agenda),
+                                ),
+                                ButtonSegment(
+                                  value: ViewType.gridView,
+                                  icon: Icon(Icons.apps_rounded),
+                                ),
+                              ],
+                              selected: selection,
+                              onSelectionChanged: (Set<ViewType> newSelection) {
+                                setState(
+                                  () {
+                                    selection = newSelection;
+                                  },
+                                );
+                              },
+                            ),
                           ),
                         ],
                       ),
-                      SliverToBoxAdapter(
-                        child: Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(top: 24.0),
-                              child:
-                                  Icon(Icons.family_restroom_rounded, size: 96),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SegmentedButton(
-                                segments: const <ButtonSegment<ViewType>>[
-                                  ButtonSegment(
-                                      value: ViewType.listView,
-                                      icon: Icon(Icons.view_agenda)),
-                                  ButtonSegment(
-                                      value: ViewType.gridView,
-                                      icon: Icon(Icons.apps_rounded)),
-                                ],
-                                selected: selection,
-                                onSelectionChanged:
-                                    (Set<ViewType> newSelection) {
-                                  setState(() {
-                                    selection = newSelection;
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
+                    ),
+                    SliverPadding(
+                      padding: selection.first == ViewType.listView
+                          ? EdgeInsets.all(16.0)
+                          : EdgeInsets.all(0.0),
+                      sliver: SliverGrid(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount:
+                              selection.first == ViewType.listView ? 1 : 3,
+                          childAspectRatio: 1.0,
+                          crossAxisSpacing: 1.0,
+                          mainAxisSpacing: selection.first == ViewType.listView
+                              ? verticalPadding
+                              : 1.5,
+                          mainAxisExtent:
+                              selection.first == ViewType.listView ? 500 : 135,
+                        ),
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            debugPrint(snapshot.toString());
+                            return createCard(
+                                selection.first, snapshot.data.docs[index]);
+                          },
+                          childCount: snapshot.data.docs.length,
                         ),
                       ),
-                      SliverPadding(
-                        padding: selection.first == ViewType.listView
-                            ? EdgeInsets.all(16.0)
-                            : EdgeInsets.all(0.0),
-                        sliver: SliverGrid(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount:
-                                selection.first == ViewType.listView ? 1 : 3,
-                            childAspectRatio: 1.0,
-                            crossAxisSpacing: 1.0,
-                            mainAxisSpacing:
-                                selection.first == ViewType.listView
-                                    ? verticalPadding
-                                    : 1.5,
-                            mainAxisExtent: selection.first == ViewType.listView
-                                ? 500
-                                : 135,
-                          ),
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              debugPrint(snapshot.toString());
-                              return createCard(
-                                  selection.first, snapshot.data.docs[index]);
-                            },
-                            childCount: snapshot.data.docs.length,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                : Center(
-                    child: CircularProgressIndicator(),
-                  );
-          }),
+                    ),
+                  ],
+                )
+              : Center(
+                  child: CircularProgressIndicator(),
+                );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -291,17 +301,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () async {
                       createNewGroupName = groupNameTextController.text;
                       if (createNewGroupName != "") {
-                        setState(() {
-                          _isLoading = true;
-                        });
+                        setState(
+                          () {
+                            _isLoading = true;
+                          },
+                        );
                         StorageMethods(
                                 uid: FirebaseAuth.instance.currentUser!.uid)
                             .storageCreateGroup(
                                 FirebaseAuth.instance.currentUser!.uid,
                                 createNewGroupName)
-                            .whenComplete(() {
-                          _isLoading = false;
-                        });
+                            .whenComplete(
+                          () {
+                            _isLoading = false;
+                          },
+                        );
                         Navigator.of(context).pop();
                         showSnackBar(context, "Group created successfully.");
                       }

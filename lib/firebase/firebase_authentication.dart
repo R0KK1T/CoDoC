@@ -43,11 +43,12 @@ class AuthMethods {
             .storageUploadImage('profilePics', file, false);
 
         model.User user = model.User(
-            username: username,
-            userId: userCredentials.user!.uid,
-            photoUrl: photoUrl,
-            email: email,
-            groupIds: []);
+          username: username,
+          userId: userCredentials.user!.uid,
+          photoUrl: photoUrl,
+          email: email,
+          groupIds: [],
+        );
 
         // adding user in our database
         await _firestore.collection("users").doc(userCredentials.user!.uid).set(
