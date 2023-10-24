@@ -115,7 +115,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     );
                   } else {
-                    return Container();
+                    return Center(
+                      child: Text(
+                        'No groups',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    );
                   }
                 },
               ),
@@ -262,7 +269,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 )
               : Center(
-                  child: CircularProgressIndicator(),
+                  child: Text(
+                    'No groups',
+                  ),
                 );
         },
       ),
