@@ -38,8 +38,7 @@ class StorageMethods {
     return downloadUrl;
   }
 
-  Future storageCreateGroup(
-      /*String username, */ String id, String groupName) async {
+  Future storageCreateGroup(String id, String groupName) async {
     DocumentReference groupDocumentReference = await groupCollection.add(
       {
         "groupName": groupName,
@@ -48,6 +47,7 @@ class StorageMethods {
         "members": [],
         "groupId": "",
         "recentMessage": "",
+        "posts": [],
       },
     );
     // update group members
@@ -121,10 +121,5 @@ class StorageMethods {
 
   storageCreatePost(String groupId, Map<String, dynamic> postData) async {
     groupCollection.doc(groupId).collection("posts").add(postData);
-    groupCollection.doc(groupId).update({
-      "recentMessage": postData['message'],
-      "recentMessageSender": postData['sender'],
-      "recentMessageTime": postData['time'].toString(),
-    });
   }
 }

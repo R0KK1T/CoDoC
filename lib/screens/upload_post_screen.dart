@@ -1,7 +1,12 @@
 import 'dart:typed_data';
+import 'package:codoc/models/post.dart';
 import 'package:codoc/utils/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:codoc/firebase/firebase_storage.dart';
+import 'package:codoc/firebase/firebase_authentication.dart';
+import 'package:uuid/uuid.dart';
 
 class MyUploadPage extends StatefulWidget {
   const MyUploadPage({super.key, required this.title});
@@ -83,7 +88,14 @@ class _MyUploadPageState extends State<MyUploadPage> {
             Padding(
               padding: const EdgeInsets.only(bottom: 26),
               child: FilledButton(
-                onPressed: controllerTitle.text.isNotEmpty ? () {} : null,
+                onPressed: controllerTitle.text.isNotEmpty
+                    ? () async {
+                        createPost(controllerTitle.text,
+                            controllerDescription.text, _image!);
+                        Navigator.of(context).pop();
+                        showSnackBar(context, "Post created successfully.");
+                      }
+                    : null,
                 child: const Text('Upload'),
               ),
             ),
@@ -146,8 +158,31 @@ class _MyUploadPageState extends State<MyUploadPage> {
     );
   }
 
+  Future<String> createPost(
+      String title, String description, Uint8List image) async {
+    try {
+      String postId = const Uuid().v1();
+      String photoUrl =
+          await StorageMethods().storageUploadImage('posts', image, true);
+      Post post = Post(
+        description: description,
+        uid: FirebaseAuth.instance.currentUser!.uid,
+        title: title,
+        postId: postId,
+        datePublished: DateTime.now(),
+        postUrl: photoUrl,
+      );
+
+      String temporaryGroupId = "Yaa8GbfJiJ8uGxQzq2qO";
+      StorageMethods(uid: FirebaseAuth.instance.currentUser!.uid)
+          .storageCreatePost(temporaryGroupId, post.toJson());
+      return "Great success <3";
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
   Container postUploadImageButton() {
-    
     return Container(
       height: 250,
       width: 340,
