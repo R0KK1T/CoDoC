@@ -169,7 +169,7 @@ class _MyUploadPageState extends State<MyUploadPage> {
         uid: FirebaseAuth.instance.currentUser!.uid,
         title: title,
         postId: postId,
-        datePublished: DateTime.now(),
+        datePublished: DateTime.now().toString(),
         postUrl: photoUrl,
       );
 

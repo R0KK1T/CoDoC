@@ -5,7 +5,7 @@ class Post {
   final String uid;
   final String title;
   final String postId;
-  final DateTime datePublished;
+  final String datePublished;
   final String postUrl;
 
   const Post({

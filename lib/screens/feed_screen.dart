@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:codoc/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,10 +29,6 @@ enum ViewType { listView, gridView }
 
 class _MyHomePageState extends State<MyHomePage> {
   Set<ViewType> selection = {ViewType.listView};
-  List<String> imagePaths = [
-    'assets/images/documentation_example.PNG',
-    'assets/images/documentation_example_2.png',
-  ];
 
   final double horizontalPadding = 24;
   TextEditingController groupNameTextController = TextEditingController();
@@ -40,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _isLoading = false;
   AuthMethods authService = AuthMethods();
   Stream? groups;
+  Stream? groupPosts;
 
   gettingUserData() async {
     // getting the list of snapshots in our stream
@@ -48,6 +46,12 @@ class _MyHomePageState extends State<MyHomePage> {
         .then((snapshot) {
       setState(() {
         groups = snapshot;
+      });
+    });
+    await StorageMethods().storageGetPosts(widget.groupId).then((snapshot) {
+      setState(() {
+        groupPosts = snapshot;
+        debugPrint(groupPosts.toString());
       });
     });
   }
@@ -147,75 +151,91 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text('CODOC'),
         centerTitle: true,
       ), */
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            title: Text(widget.groupName),
-            centerTitle: true,
-            pinned: true,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () {
-                  //_showAddDialog(context);
-                },
-              ),
-            ],
-          ),
-          SliverToBoxAdapter(
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 24.0),
-                  child: Icon(Icons.family_restroom_rounded, size: 96),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SegmentedButton(
-                    segments: const <ButtonSegment<ViewType>>[
-                      ButtonSegment(
-                          value: ViewType.listView,
-                          icon: Icon(Icons.view_agenda)),
-                      ButtonSegment(
-                          value: ViewType.gridView,
-                          icon: Icon(Icons.apps_rounded)),
+      body: StreamBuilder(
+          stream: groupPosts,
+          builder: (context, AsyncSnapshot snapshot) {
+            return snapshot.hasData
+                ? CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        title: Text(widget.groupName),
+                        centerTitle: true,
+                        pinned: true,
+                        actions: <Widget>[
+                          IconButton(
+                            icon: Icon(Icons.add),
+                            onPressed: () {
+                              //_showAddDialog(context);
+                            },
+                          ),
+                        ],
+                      ),
+                      SliverToBoxAdapter(
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(top: 24.0),
+                              child:
+                                  Icon(Icons.family_restroom_rounded, size: 96),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SegmentedButton(
+                                segments: const <ButtonSegment<ViewType>>[
+                                  ButtonSegment(
+                                      value: ViewType.listView,
+                                      icon: Icon(Icons.view_agenda)),
+                                  ButtonSegment(
+                                      value: ViewType.gridView,
+                                      icon: Icon(Icons.apps_rounded)),
+                                ],
+                                selected: selection,
+                                onSelectionChanged:
+                                    (Set<ViewType> newSelection) {
+                                  setState(() {
+                                    selection = newSelection;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SliverPadding(
+                        padding: selection.first == ViewType.listView
+                            ? EdgeInsets.all(16.0)
+                            : EdgeInsets.all(0.0),
+                        sliver: SliverGrid(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount:
+                                selection.first == ViewType.listView ? 1 : 3,
+                            childAspectRatio: 1.0,
+                            crossAxisSpacing: 1.0,
+                            mainAxisSpacing:
+                                selection.first == ViewType.listView
+                                    ? verticalPadding
+                                    : 1.5,
+                            mainAxisExtent: selection.first == ViewType.listView
+                                ? 500
+                                : 135,
+                          ),
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              debugPrint(snapshot.toString());
+                              return createCard(
+                                  selection.first, snapshot.data.docs[index]);
+                            },
+                            childCount: snapshot.data.docs.length,
+                          ),
+                        ),
+                      ),
                     ],
-                    selected: selection,
-                    onSelectionChanged: (Set<ViewType> newSelection) {
-                      setState(() {
-                        selection = newSelection;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SliverPadding(
-            padding: selection.first == ViewType.listView
-                ? EdgeInsets.all(16.0)
-                : EdgeInsets.all(0.0),
-            sliver: SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: selection.first == ViewType.listView ? 1 : 3,
-                childAspectRatio: 1.0,
-                crossAxisSpacing: 1.0,
-                mainAxisSpacing: selection.first == ViewType.listView
-                    ? verticalPadding
-                    : 1.5,
-                mainAxisExtent:
-                    selection.first == ViewType.listView ? 500 : 135,
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return createCard(selection.first, imagePaths);
-                },
-                childCount: 40,
-              ),
-            ),
-          ),
-        ],
-      ),
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
+                  );
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -328,12 +348,12 @@ class ListViewGroupTile extends StatelessWidget {
   }
 }
 
-Widget createCard(ViewType viewType, List<String> imagePaths) {
+Widget createCard(ViewType viewType, dynamic snapshot) {
   switch (viewType) {
     case ViewType.listView:
-      return ListViewCard(imagePaths: imagePaths);
+      return ListViewCard(post: snapshot);
     case ViewType.gridView:
-      return GridViewCard(imagePaths: imagePaths);
+      return GridViewCard(post: snapshot);
     default:
       // Handle other cases if needed
       return Container();
@@ -341,12 +361,11 @@ Widget createCard(ViewType viewType, List<String> imagePaths) {
 }
 
 class GridViewCard extends StatelessWidget {
-  final List<String> imagePaths;
-  final _random = new Random();
+  final dynamic post;
 
-  GridViewCard({
+  const GridViewCard({
     Key? key,
-    required this.imagePaths,
+    required this.post,
   }) : super(key: key);
 
   @override
@@ -360,10 +379,7 @@ class GridViewCard extends StatelessWidget {
         physics: NeverScrollableScrollPhysics(),
         crossAxisCount: 1,
         children: [
-          Image.asset(
-            imagePaths[_random.nextInt(2)],
-            fit: BoxFit.cover,
-          ),
+          Image.network(post.data()["postUrl"]),
         ],
       ),
     );
@@ -371,11 +387,11 @@ class GridViewCard extends StatelessWidget {
 }
 
 class ListViewCard extends StatelessWidget {
-  final List<String> imagePaths;
+  final dynamic post;
 
   const ListViewCard({
     Key? key,
-    required this.imagePaths,
+    required this.post,
   }) : super(key: key);
 
   @override
@@ -386,14 +402,12 @@ class ListViewCard extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: PageView.builder(
-              itemCount: imagePaths.length,
+              itemCount: 1,
               pageSnapping: true,
-              itemBuilder: (context, pagePosition) {
+              itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.only(top: 16.0),
-                  child: Image.asset(
-                    imagePaths[pagePosition],
-                  ),
+                  child: Image.network(post.data()["postUrl"]),
                 ); //Image.network(images[pagePosition]));
               },
             ),
@@ -401,7 +415,9 @@ class ListViewCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8, left: 8),
             child: Text(
-              'Title',
+              post
+                  .data()["title"]
+                  .toString(), //'title', //post["title"].toString(),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -411,7 +427,8 @@ class ListViewCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 8),
             child: Text(
-              '2 aug. 2023',
+              '${post.data()["datePublished"]}',
+              //.toString(), //'date', //post["datePublished"].toString(),
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -420,7 +437,9 @@ class ListViewCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+              post
+                  .data()["description"]
+                  .toString(), //'desc.', //post["description"].toString(),
               style: TextStyle(
                 fontSize: 14,
               ),
