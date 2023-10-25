@@ -17,6 +17,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   Uint8List? _image;
+  // ignore: unused_field
   bool _isLoading = false;
 
   @override
@@ -34,7 +35,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
 
     // signup user using our authmethodds
-    String res = await AuthMethods().signUpUser(
+    String res = await AuthMethods().authUserSignUp(
         email: _emailController.text,
         password: _passwordController.text,
         username: _usernameController.text,
@@ -49,7 +50,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => MyHomePage(
-              groupName: 'Hej', groupId: '',
+              groupName: 'Hej',
+              groupId: '',
             ),
           ),
         );
@@ -66,7 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   selectImage() async {
-    Uint8List im = await pickImage(ImageSource.gallery);
+    Uint8List im = await insertImage(ImageSource.gallery);
     // set state because we need to display the image we selected on the circle avatar
     setState(() {
       _image = im;

@@ -20,7 +20,7 @@ class AuthMethods {
 
   // Signing Up User
 
-  Future<String> signUpUser({
+  Future<String> authUserSignUp({
     required String email,
     required String password,
     required String username,
@@ -47,7 +47,8 @@ class AuthMethods {
             userId: userCredentials.user!.uid,
             photoUrl: photoUrl,
             email: email,
-            groupIds: []);
+            groups: [],
+          );
 
         // adding user in our database
         await _firestore.collection("users").doc(userCredentials.user!.uid).set(
@@ -72,7 +73,7 @@ class AuthMethods {
   }
 
   // logging in user
-  Future<String> loginUser({
+  Future<String> authUserSignIn({
     required String email,
     required String password,
   }) async {
@@ -94,7 +95,7 @@ class AuthMethods {
     return response;
   }
 
-  Future<void> signOut() async {
+  Future<void> authUserSignOut() async {
     await _auth.signOut();
   }
 }

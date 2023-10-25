@@ -1,11 +1,15 @@
 import 'dart:typed_data';
+import 'package:codoc/models/post.dart';
 import 'package:codoc/utils/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:codoc/firebase/firebase_storage.dart';
+import 'package:uuid/uuid.dart';
 
 class MyUploadPage extends StatefulWidget {
-  const MyUploadPage({super.key, required this.title});
-  final String title;
+  const MyUploadPage({super.key, required this.groupId});
+  final String groupId;
 
   @override
   State<MyUploadPage> createState() => _MyUploadPageState();
@@ -28,10 +32,10 @@ class _MyUploadPageState extends State<MyUploadPage> {
   }
 
   selectImage() async {
-    Uint8List im = await pickImage(ImageSource.gallery);
+    Uint8List selectedImage = await insertImage(ImageSource.gallery);
     setState(
       () {
-        _image = im;
+        _image = selectedImage;
       },
     );
   }
@@ -46,48 +50,61 @@ class _MyUploadPageState extends State<MyUploadPage> {
       ),
       body: Center(
         child: SingleChildScrollView(
-          child: Column(children: <Widget>[
-            postChoosePhotoFromGallery(),
-            Padding(padding: EdgeInsets.only(bottom: 26)),
+          child: Column(
+            children: <Widget>[
+              postChoosePhotoFromGallery(),
+              Padding(padding: EdgeInsets.only(bottom: 26)),
 
 // --------- Add more than one photo ---------
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 26, right: 208, bottom: 26),
-            //   child: FilledButton.tonal(
-            //     onPressed: () {},
-            //     child: Row(
-            //       mainAxisAlignment: MainAxisAlignment.center,
-            //       children: const <Widget>[
-            //         Icon(Icons.add_a_photo),
-            //         SizedBox(width: 8),
-            //         Text('Add photo'),
-            //       ],
-            //     ),
-            //   ),
-            // ),
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 26, right: 208, bottom: 26),
+              //   child: FilledButton.tonal(
+              //     onPressed: () {},
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: const <Widget>[
+              //         Icon(Icons.add_a_photo),
+              //         SizedBox(width: 8),
+              //         Text('Add photo'),
+              //       ],
+              //     ),
+              //   ),
+              // ),
 // --------- Add more than one photo ---------
 
-            _textFieldTitle(controllerTitle),
-            Padding(
-              padding: const EdgeInsets.only(left: 26),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
-                  Text("* mandatory"),
-                ],
+              _textFieldTitle(controllerTitle),
+              Padding(
+                padding: const EdgeInsets.only(left: 26),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: const [
+                    Text("Obligatory field"),
+                  ],
+                ),
+              ), //Align to left
+              Padding(
+                padding: EdgeInsets.only(bottom: 26),
               ),
-            ), //Align to left
-            Padding(padding: EdgeInsets.only(bottom: 26)),
-            _textFieldDescription(controllerDescription),
-            Padding(padding: EdgeInsets.only(bottom: 26)),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 26),
-              child: FilledButton(
-                onPressed: controllerTitle.text.isNotEmpty ? () {} : null,
-                child: const Text('Upload'),
+              _textFieldDescription(controllerDescription),
+              Padding(
+                padding: EdgeInsets.only(bottom: 26),
               ),
-            ),
-          ]),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 26),
+                child: FilledButton(
+                  onPressed: controllerTitle.text.isNotEmpty
+                      ? () async {
+                          createPost(controllerTitle.text,
+                              controllerDescription.text, _image!);
+                          Navigator.of(context).pop();
+                          showSnackBar(context, "Post created successfully.");
+                        }
+                      : null,
+                  child: const Text('Upload'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -95,13 +112,15 @@ class _MyUploadPageState extends State<MyUploadPage> {
 
   Padding _textFieldTitle(controller) {
     return Padding(
-      padding: const EdgeInsets.only(left: 26, right: 26),
+      padding: const EdgeInsets.only(
+        left: 26,
+        right: 26,
+      ),
       child: TextField(
         controller: controller,
-        obscureText: false,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
-          labelText: "Title*",
+          labelText: "Title",
         ),
       ),
     );
@@ -109,12 +128,14 @@ class _MyUploadPageState extends State<MyUploadPage> {
 
   Padding _textFieldDescription(controller) {
     return Padding(
-      padding: const EdgeInsets.only(left: 26, right: 26),
+      padding: const EdgeInsets.only(
+        left: 26,
+        right: 26,
+      ),
       child: TextField(
         maxLines: 3,
         maxLength: 140,
         controller: controller,
-        obscureText: false,
         decoration: InputDecoration(
           alignLabelWithHint: true,
           border: OutlineInputBorder(),
@@ -135,7 +156,9 @@ class _MyUploadPageState extends State<MyUploadPage> {
                   decoration: BoxDecoration(
                     // borderRadius: BorderRadius.circular(12),
                     image: DecorationImage(
-                      image: MemoryImage(_image!),
+                      image: MemoryImage(
+                        _image!,
+                      ),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -146,8 +169,40 @@ class _MyUploadPageState extends State<MyUploadPage> {
     );
   }
 
+  Future<String> createPost(
+    String title,
+    String description,
+    Uint8List image,
+  ) async {
+    try {
+      String postId = const Uuid().v1();
+      String photoUrl = await StorageMethods().storageUploadImage(
+        'posts',
+        image,
+        true,
+      );
+      Post post = Post(
+        description: description,
+        uid: FirebaseAuth.instance.currentUser!.uid,
+        title: title,
+        postId: postId,
+        datePublished: DateTime.now().millisecondsSinceEpoch,
+        postUrl: photoUrl,
+      );
+
+      // String temporaryGroupId = "Yaa8GbfJiJ8uGxQzq2qO";
+      StorageMethods(uid: FirebaseAuth.instance.currentUser!.uid)
+          .storageCreatePost(
+        widget.groupId,
+        post.toJson(),
+      );
+      return "Great success <3";
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
   Container postUploadImageButton() {
-    
     return Container(
       height: 250,
       width: 340,
@@ -160,11 +215,13 @@ class _MyUploadPageState extends State<MyUploadPage> {
             children: <Widget>[
               SimpleDialogOption(
                 onPressed: () async {
+                  Uint8List image = await insertImage(ImageSource.camera);
+                  setState(
+                    () {
+                      _image = image;
+                    },
+                  );
                   Navigator.pop(context);
-                  Uint8List image = await pickImage(ImageSource.camera);
-                  setState(() {
-                    _image = image;
-                  });
                 },
                 child: const Text('Take picture'),
               ),
