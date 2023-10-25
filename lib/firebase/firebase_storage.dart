@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class StorageMethods {
@@ -38,12 +39,12 @@ class StorageMethods {
     return downloadUrl;
   }
 
-  Future storageCreateGroup(String id, String groupName) async {
+  Future storageCreateGroup(String id, String userName, String groupName) async {
     DocumentReference groupDocumentReference = await groupCollection.add(
       {
         "groupName": groupName,
         "groupIcon": "",
-        "admin": id,
+        "admin": "${id}_$userName",
         "members": [],
         "groupId": "",
         "recentMessage": "",
@@ -52,7 +53,7 @@ class StorageMethods {
     );
     // update group members
     await groupDocumentReference.update({
-      "members": FieldValue.arrayUnion([uid]),
+      "members": FieldValue.arrayUnion(["${id}_$userName"]),
       "groupId": groupDocumentReference.id,
     });
 
@@ -89,6 +90,63 @@ class StorageMethods {
       return true;
     } else {
       return false;
+    }
+  }
+
+  Future<String?> getUserByEmail(String email) async {
+    try {
+      QuerySnapshot querySnapshot =
+          await userCollection.where('email', isEqualTo: email).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // User found, return the first matching document
+        return querySnapshot.docs.first['uid'];
+      } else {
+        // User not found
+        return null;
+      }
+    } catch (e) {
+      // Handle errors here
+      debugPrint('Error: $e');
+      return null;
+    }
+  }
+
+  Future<String?> getUserNameById(String userId) async {
+    try {
+      QuerySnapshot querySnapshot =
+          await userCollection.where('uid', isEqualTo: userId).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // User found, return the first matching document
+        return querySnapshot.docs.first['username'];
+      } else {
+        // User not found
+        return null;
+      }
+    } catch (e) {
+      // Handle errors here
+      debugPrint('Error: $e');
+      return null;
+    }
+  }
+
+  Future storageAddUserToGroup(
+      String userId, String userName, String groupId, String groupName) async {
+    DocumentReference userDocumentReference = userCollection.doc(userId);
+    DocumentReference groupDocumentReference = groupCollection.doc(groupId);
+
+    DocumentSnapshot documentSnapshot = await userDocumentReference.get();
+    List<dynamic> groups = await documentSnapshot['groups'];
+
+    // if user has our groups -> then remove then or also in other part re join
+    if (!groups.contains("${groupId}_$groupName")) {
+      await userDocumentReference.update({
+        "groups": FieldValue.arrayUnion(["${groupId}_$groupName"])
+      });
+      await groupDocumentReference.update({
+        "members": FieldValue.arrayUnion(["${userId}_$userName"])
+      });
     }
   }
 
