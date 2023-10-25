@@ -347,10 +347,11 @@ class _MyHomePageState extends State<MyHomePage> {
                             _isLoading = true;
                           },
                         );
+                        String? userName = await StorageMethods().getUserNameById(FirebaseAuth.instance.currentUser!.uid);
                         StorageMethods(
                                 uid: FirebaseAuth.instance.currentUser!.uid)
                             .storageCreateGroup(
-                                FirebaseAuth.instance.currentUser!.uid,
+                                FirebaseAuth.instance.currentUser!.uid, userName!,
                                 createNewGroupName)
                             .whenComplete(
                           () {

@@ -41,6 +41,10 @@ class _AddMembersPageState extends State<AddMembersPage> {
     );
   }
 
+  String getUserName(String name) {
+    return name.substring(name.indexOf("_") + 1);
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -65,7 +69,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
                   itemCount: snapshot.data['members'].length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(snapshot.data['members'][index]),
+                      title: Text(getUserName(snapshot.data['members'][index])),
                       titleTextStyle:
                           const TextStyle(fontSize: 22, color: Colors.black),
                       leading: Icon(Icons.abc),
@@ -126,9 +130,11 @@ class _AddMembersPageState extends State<AddMembersPage> {
                         );
                         String? userId = await StorageMethods()
                             .getUserByEmail(newMemberEmail);
+                        String? userName =
+                            await StorageMethods().getUserNameById(userId!);
                         StorageMethods()
-                            .storageAddUserToGroup(
-                                userId!, widget.groupId, widget.groupName)
+                            .storageAddUserToGroup(userId, userName!,
+                                widget.groupId, widget.groupName)
                             .whenComplete(
                           () {
                             _isLoading = false;
