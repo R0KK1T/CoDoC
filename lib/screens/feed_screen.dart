@@ -1,3 +1,4 @@
+import 'package:codoc/screens/add_members_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:codoc/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -209,8 +210,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.only(top: 24.0),
-                            child:
-                                Icon(Icons.family_restroom_rounded, size: 96),
+                            child: IconButton(
+                              icon:
+                                  Icon(Icons.family_restroom_rounded, size: 96),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AddMembersPage(
+                                              groupId: widget.groupId,
+                                              groupName: widget.groupName,
+                                            )));
+                              },
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
