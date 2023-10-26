@@ -72,7 +72,7 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
             children: <Widget>[
               //Text
               Text(
-                'CoDoc',
+                'CoLog',
                 style: TextStyle(
                   fontSize: 60,
                   fontWeight: FontWeight.w300,
@@ -114,19 +114,15 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
               ),
 
               //Login Button
-              SizedBox(
-                // width: 300.0,
-                height: 40.0,
-                child: FilledButton(
-                  onPressed: () {
-                    loginUser();
-                  },
-                  child: Text(
-                    'Login',
-                    style: TextStyle(
-                      // fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                    ),
+              FilledButton(
+                onPressed: () {
+                  loginUser();
+                },
+                child: Text(
+                  'Login',
+                  style: TextStyle(
+                    // fontSize: 20,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
               ),
