@@ -67,8 +67,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  selectImage() async {
-    Uint8List im = await insertImage(ImageSource.gallery);
+  selectImage(ImageSource source) async {
+    Uint8List im = await insertImage(source);
     // set state because we need to display the image we selected on the circle avatar
     setState(() {
       _image = im;
@@ -111,7 +111,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     bottom: -10,
                     left: 80,
                     child: IconButton(
-                      onPressed: selectImage,
+                      onPressed: () => showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) => SimpleDialog(
+                          children: <Widget>[
+                            SimpleDialogOption(
+                              onPressed: () async {
+                                selectImage(ImageSource.camera);
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Take picture'),
+                            ),
+                            SimpleDialogOption(
+                              onPressed: () {
+                                selectImage(ImageSource.gallery);
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Choose from gallery'),
+                            ),
+                          ],
+                        ),
+                      ),
                       icon: const Icon(Icons.add_a_photo),
                     ),
                   )
