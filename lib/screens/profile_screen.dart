@@ -75,11 +75,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       );
                     },
                     icon: Icon(Icons.logout),
+                    color: Colors.red,
                     iconSize: 24,
                   ),
                   Text(
                     "Sign Out",
                     style: TextStyle(
+                        color: Colors.red,
                         fontSize: 16), // You can adjust the font size as needed
                   ),
                 ],

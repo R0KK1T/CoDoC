@@ -119,7 +119,7 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
                   loginUser();
                 },
                 child: Text(
-                  'Login',
+                  'Log in',
                   style: TextStyle(
                     // fontSize: 20,
                     fontWeight: FontWeight.normal,
@@ -137,7 +137,7 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => SignUpScreen()));
                 },
-                child: const Text('Sign up here'),
+                child: const Text('No account? Sign up here'),
               ),
             ],
           ),
