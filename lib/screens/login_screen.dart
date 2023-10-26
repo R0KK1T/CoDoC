@@ -43,7 +43,7 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
                 builder: (context) => MyHomePage(
-                      groupName: 'abcde',
+                      groupName: 'CLS055 Grupp 12',
                       groupId: '123',
                     )),
             (route) => false);
