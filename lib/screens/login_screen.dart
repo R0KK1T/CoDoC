@@ -6,32 +6,6 @@ import '../firebase/firebase_options.dart';
 import 'package:codoc/firebase/firebase_authentication.dart';
 import 'package:codoc/utils/utils.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: {
-        '/signup': (context) => SignUpScreen(),
-      },
-      title: 'CoDoc',
-      theme: ThemeData(
-        useMaterial3: true,
-      ),
-      home: MyLoginScreen(),
-    );
-  }
-}
-
 class MyLoginScreen extends StatefulWidget {
   const MyLoginScreen({super.key});
 
