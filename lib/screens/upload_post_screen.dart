@@ -31,8 +31,8 @@ class _MyUploadPageState extends State<MyUploadPage> {
     });
   }
 
-  selectImage() async {
-    Uint8List selectedImage = await insertImage(ImageSource.gallery);
+  selectImage(ImageSource source) async {
+    Uint8List selectedImage = await insertImage(source);
     setState(
       () {
         _image = selectedImage;
@@ -215,18 +215,16 @@ class _MyUploadPageState extends State<MyUploadPage> {
             children: <Widget>[
               SimpleDialogOption(
                 onPressed: () async {
-                  Uint8List image = await insertImage(ImageSource.camera);
-                  setState(
-                    () {
-                      _image = image;
-                    },
-                  );
+                  selectImage(ImageSource.camera);
                   Navigator.pop(context);
                 },
                 child: const Text('Take picture'),
               ),
               SimpleDialogOption(
-                onPressed: selectImage,
+                onPressed: () {
+                  selectImage(ImageSource.gallery);
+                  Navigator.pop(context);
+                },
                 child: const Text('Choose from gallery'),
               ),
             ],
