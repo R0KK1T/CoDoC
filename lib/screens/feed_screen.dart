@@ -190,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
-            ListTile(
+            /* ListTile(
               title: const Text(
                 'Sign out',
                 style: TextStyle(fontSize: 14),
@@ -208,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   (route) => false,
                 );
               },
-            ),
+            ), */
           ],
         ),
       ),

@@ -1,3 +1,5 @@
+import 'package:codoc/firebase/firebase_authentication.dart';
+import 'package:codoc/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class MyProfilePage extends StatefulWidget {
@@ -19,6 +21,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
   TextEditingController controllerName = TextEditingController();
   TextEditingController controllerEmail = TextEditingController();
   TextEditingController controllerPass = TextEditingController();
+  AuthMethods authService = AuthMethods();
 
   @override
   void initState() {
@@ -57,6 +60,32 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 child: const Text('Save'),
               ),
             ),
+            Padding(
+              padding: EdgeInsets.only(top: 72),
+              child: Column(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      authService.authUserSignOut();
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: ((context) => const MyLoginScreen()),
+                        ),
+                        (route) => false,
+                      );
+                    },
+                    icon: Icon(Icons.logout),
+                    iconSize: 24,
+                  ),
+                  Text(
+                    "Sign Out",
+                    style: TextStyle(
+                        fontSize: 16), // You can adjust the font size as needed
+                  ),
+                ],
+              ),
+            )
+
             // const SizedBox(height: 30),
           ]),
         ),
