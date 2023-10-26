@@ -23,7 +23,6 @@ class _MySettingsPageState extends State<MySettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text("Settings"),
         centerTitle: true,
       ),
@@ -40,8 +39,8 @@ class _MySettingsPageState extends State<MySettingsPage> {
                 onChanged: (bool value) {
                   setState(() {
                     //light = value;
-                  showSnackBar(context,
-                      'You have to be a member of CoLog Premium to use this feature');
+                    showSnackBar(context,
+                        'You have to be a member of CoLog Premium to use this feature');
                   });
                 },
               ),
