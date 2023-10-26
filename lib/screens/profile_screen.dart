@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 
-
 class MyProfilePage extends StatefulWidget {
-  const MyProfilePage({super.key, required this.title});
-  final String title;
+  const MyProfilePage(
+      {super.key,
+      required this.userId,
+      required this.userName,
+      required this.profImg});
+  //final String title;
+  final String userId;
+  final String userName;
+  final String profImg;
 
   @override
   State<MyProfilePage> createState() => _MyProfilePageState();
@@ -15,17 +21,28 @@ class _MyProfilePageState extends State<MyProfilePage> {
   TextEditingController controllerPass = TextEditingController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controllerName = TextEditingController(text: widget.userName);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        //backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text("Profile"),
         centerTitle: true,
       ),
       body: Center(
         child: SingleChildScrollView(
           child: Column(children: <Widget>[
-            _profilePic(),
+            //_profilePic(),
+            CircleAvatar(
+              backgroundImage: NetworkImage(widget.profImg),
+              radius: 80,
+            ),
             Padding(padding: EdgeInsets.only(bottom: 48)),
             _textFieldName(controllerName),
             Padding(padding: EdgeInsets.only(bottom: 24)),
@@ -56,7 +73,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         obscureText: false,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
-          labelText: "Name",
+          labelText: "Username",
         ),
       ),
     );

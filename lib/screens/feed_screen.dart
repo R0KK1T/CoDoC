@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:codoc/screens/add_members_screen.dart';
+import 'package:codoc/screens/profile_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:codoc/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,6 +41,9 @@ class _MyHomePageState extends State<MyHomePage> {
   AuthMethods authService = AuthMethods();
   Stream? groups;
   Stream? groupPosts;
+  String userId = "";
+  String? userName = "";
+  String? profImg;
 
   @override
   void initState() {
@@ -47,6 +53,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   gettingUserData() async {
     // getting the list of snapshots in our stream
+    userId = FirebaseAuth.instance.currentUser!.uid;
+    userName = await StorageMethods().getUserNameById(userId);
+    profImg = await StorageMethods().getProfilePictureById(userId);
+
     await StorageMethods(uid: FirebaseAuth.instance.currentUser!.uid)
         .storageGetUserGroups()
         .then(
@@ -87,11 +97,27 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.only(top: 32.0),
               child: ListTile(
-                title: const Text(
-                  "Groups",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                title: Text(userName!),
+                leading: Icon(Icons.person),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyProfilePage(
+                        userId: userId,
+                        userName: userName!,
+                        profImg: profImg!,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            ListTile(
+              title: const Text(
+                "Groups",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -251,7 +277,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           childAspectRatio: 1.0,
                           crossAxisSpacing: 1.0,
                           mainAxisSpacing: selection.first == ViewType.listView
-                              ? verticalPadding
+                              ? horizontalPadding
                               : 1.5,
                           mainAxisExtent:
                               selection.first == ViewType.listView ? 500 : 135,
