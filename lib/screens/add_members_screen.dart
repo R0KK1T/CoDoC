@@ -23,7 +23,6 @@ class _AddMembersPageState extends State<AddMembersPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     gettingGroupData();
   }
@@ -34,7 +33,6 @@ class _AddMembersPageState extends State<AddMembersPage> {
         setState(
           () {
             groupMembers = snapshot;
-            //debugPrint("*** ${snapshot.data['members'][0]}");
           },
         );
       },
@@ -47,7 +45,6 @@ class _AddMembersPageState extends State<AddMembersPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -92,7 +89,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
       context: context,
       builder: (BuildContext context) {
         return SimpleDialog(
-          title: Text('Add new member'), // Customize dialog title as needed
+          title: Text('Add new member'),
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(
@@ -103,7 +100,6 @@ class _AddMembersPageState extends State<AddMembersPage> {
                 controller: emailTextController,
                 decoration: const InputDecoration(
                   labelText: 'Email',
-                  //hintText: 'Write group name',
                 ),
               ),
             ),
