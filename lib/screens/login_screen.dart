@@ -127,30 +127,6 @@ class _MyLoginScreenState extends State<MyLoginScreen> {
                 ),
               ),
 
-              Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 40.00,
-                ),
-              ),
-
-              //Text (Or log in with)
-              Padding(
-                padding: EdgeInsets.only(
-                  bottom: 10.0,
-                ),
-                child: Text(
-                  'Or log in with',
-                ),
-              ),
-
-              Image.asset(
-                'assets/images/googleicon.png', // Replace with the path to your image file
-                width: 50, // Set the width of the image
-                height: 50, // Set the height of the image
-              ),
-
-              //Signup
-              const SizedBox(height: 10),
               TextButton(
                 style: TextButton.styleFrom(
                   textStyle: const TextStyle(fontSize: 15),
