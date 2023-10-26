@@ -112,6 +112,25 @@ class StorageMethods {
     }
   }
 
+  Future<String?> getProfilePictureById(String userId) async {
+    try {
+      QuerySnapshot querySnapshot =
+          await userCollection.where('uid', isEqualTo: userId).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // User found, return the first matching document
+        return querySnapshot.docs.first['photoUrl'];
+      } else {
+        // User not found
+        return null;
+      }
+    } catch (e) {
+      // Handle errors here
+      debugPrint('Error: $e');
+      return null;
+    }
+  }
+
   Future<String?> getUserNameById(String userId) async {
     try {
       QuerySnapshot querySnapshot =

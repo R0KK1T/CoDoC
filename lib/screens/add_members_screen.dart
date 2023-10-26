@@ -23,7 +23,6 @@ class _AddMembersPageState extends State<AddMembersPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     gettingGroupData();
   }
@@ -34,7 +33,6 @@ class _AddMembersPageState extends State<AddMembersPage> {
         setState(
           () {
             groupMembers = snapshot;
-            //debugPrint("*** ${snapshot.data['members'][0]}");
           },
         );
       },
@@ -45,9 +43,12 @@ class _AddMembersPageState extends State<AddMembersPage> {
     return name.substring(name.indexOf("_") + 1);
   }
 
+  String getUserId(String name) {
+    return name.substring(0, name.indexOf("_"));
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -62,26 +63,46 @@ class _AddMembersPageState extends State<AddMembersPage> {
         ],
       ),
       body: StreamBuilder(
-          stream: groupMembers,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                  itemCount: snapshot.data['members'].length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(getUserName(snapshot.data['members'][index])),
-                      titleTextStyle:
-                          const TextStyle(fontSize: 22, color: Colors.black),
-                      leading: Icon(Icons.abc),
-                      shape: const Border(bottom: BorderSide()),
-                    );
-                  });
-            } else {
-              return Center(
-                child: Text("No groupmembers"),
-              );
-            }
-          }),
+        stream: groupMembers,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data['members'].length,
+              itemBuilder: (context, index) {
+                String userInfo = snapshot.data['members'][index];
+                return FutureBuilder<String?>(
+                  future: getProfilePicture(userInfo),
+                  builder: (context, pictureSnapshot) {
+                    if (pictureSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return CircularProgressIndicator(); // Or some loading indicator
+                    } else if (pictureSnapshot.hasError) {
+                      return Text('Error loading profile picture');
+                    } else if (pictureSnapshot.hasData &&
+                        pictureSnapshot.data != null) {
+                      String userImage = pictureSnapshot.data!;
+                      return ListTile(
+                        title: Text(getUserName(userInfo)),
+                        titleTextStyle:
+                            const TextStyle(fontSize: 22, color: Colors.black),
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(userImage),
+                        ),
+                      );
+                    } else {
+                      return Text('No profile picture available');
+                    }
+                  },
+                );
+              },
+            );
+          } else {
+            return Center(
+              child: Text("No members in group"),
+            );
+          }
+        },
+      ),
     );
   }
 
@@ -92,7 +113,7 @@ class _AddMembersPageState extends State<AddMembersPage> {
       context: context,
       builder: (BuildContext context) {
         return SimpleDialog(
-          title: Text('Add new member'), // Customize dialog title as needed
+          title: Text('Add new member'),
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(
@@ -103,7 +124,6 @@ class _AddMembersPageState extends State<AddMembersPage> {
                 controller: emailTextController,
                 decoration: const InputDecoration(
                   labelText: 'Email',
-                  //hintText: 'Write group name',
                 ),
               ),
             ),
@@ -153,5 +173,10 @@ class _AddMembersPageState extends State<AddMembersPage> {
         );
       },
     );
+  }
+
+  Future<String?> getProfilePicture(String userInfo) async {
+    String userId = getUserId(userInfo);
+    return await StorageMethods().getProfilePictureById(userId);
   }
 }
