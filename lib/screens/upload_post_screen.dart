@@ -77,7 +77,7 @@ class _MyUploadPageState extends State<MyUploadPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: const [
-                    Text("Obligatory field"),
+                    Text("*required"),
                   ],
                 ),
               ), //Align to left
@@ -119,7 +119,7 @@ class _MyUploadPageState extends State<MyUploadPage> {
         controller: controller,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
-          labelText: "Title",
+          labelText: "Title*",
         ),
       ),
     );
