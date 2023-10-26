@@ -135,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text(
                 'Create group',
-                style: TextStyle(fontSize: 12),
+                style: TextStyle(fontSize: 14),
               ),
               leading: Icon(
                 Icons.add,
@@ -148,8 +148,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ListTile(
               title: const Text(
-                'Profile settings',
-                style: TextStyle(fontSize: 12),
+                'Settings',
+                style: TextStyle(fontSize: 14),
               ),
               leading: Icon(
                 Icons.settings,
@@ -167,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text(
                 'Sign out',
-                style: TextStyle(fontSize: 12),
+                style: TextStyle(fontSize: 14),
               ),
               leading: Icon(
                 Icons.logout,
@@ -198,9 +198,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       pinned: true,
                       actions: <Widget>[
                         IconButton(
-                          icon: Icon(Icons.three_g_mobiledata),
+                          icon: Icon(Icons.group_add),
                           onPressed: () {
-                            //_showAddDialog(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddMembersPage(
+                                          groupId: widget.groupId,
+                                          groupName: widget.groupName,
+                                        )));
                           },
                         ),
                       ],
@@ -208,22 +214,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     SliverToBoxAdapter(
                       child: Column(
                         children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(top: 24.0),
-                            child: IconButton(
-                              icon:
-                                  Icon(Icons.family_restroom_rounded, size: 96),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AddMembersPage(
-                                              groupId: widget.groupId,
-                                              groupName: widget.groupName,
-                                            )));
-                              },
-                            ),
-                          ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: SegmentedButton(
@@ -347,11 +337,14 @@ class _MyHomePageState extends State<MyHomePage> {
                             _isLoading = true;
                           },
                         );
-                        String? userName = await StorageMethods().getUserNameById(FirebaseAuth.instance.currentUser!.uid);
+                        String? userName = await StorageMethods()
+                            .getUserNameById(
+                                FirebaseAuth.instance.currentUser!.uid);
                         StorageMethods(
                                 uid: FirebaseAuth.instance.currentUser!.uid)
                             .storageCreateGroup(
-                                FirebaseAuth.instance.currentUser!.uid, userName!,
+                                FirebaseAuth.instance.currentUser!.uid,
+                                userName!,
                                 createNewGroupName)
                             .whenComplete(
                           () {
