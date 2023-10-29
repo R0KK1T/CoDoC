@@ -37,62 +37,52 @@ class _MyProfilePageState extends State<MyProfilePage> {
         //backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text("Profile"),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              signOutPress(context);
+            },
+            icon: Icon(Icons.logout),
+          ),
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
-          child: Column(children: <Widget>[
-            //_profilePic(),
-            CircleAvatar(
-              backgroundImage: NetworkImage(widget.profImg),
-              radius: 80,
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 48)),
-            _textFieldName(controllerName),
-            Padding(padding: EdgeInsets.only(bottom: 24)),
-            _textFieldEmail(controllerEmail),
-            Padding(padding: EdgeInsets.only(bottom: 24)),
-            _textFieldPass(controllerPass),
-            Padding(padding: EdgeInsets.only(bottom: 24)),
-            SizedBox(
-              height: 40,
-              child: FilledButton(
-                onPressed: () {},
-                child: const Text('Save'),
+          child: Column(
+            children: <Widget>[
+              //_profilePic(),
+              CircleAvatar(
+                backgroundImage: NetworkImage(widget.profImg),
+                radius: 80,
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 72),
-              child: Column(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      authService.authUserSignOut();
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                          builder: ((context) => const MyLoginScreen()),
-                        ),
-                        (route) => false,
-                      );
-                    },
-                    icon: Icon(Icons.logout),
-                    color: Colors.red,
-                    iconSize: 24,
-                  ),
-                  Text(
-                    "Sign Out",
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16), // You can adjust the font size as needed
-                  ),
-                ],
+              Padding(padding: EdgeInsets.only(bottom: 48)),
+              _textFieldName(controllerName),
+              Padding(padding: EdgeInsets.only(bottom: 24)),
+              _textFieldEmail(controllerEmail),
+              Padding(padding: EdgeInsets.only(bottom: 24)),
+              _textFieldPass(controllerPass),
+              Padding(padding: EdgeInsets.only(bottom: 24)),
+              SizedBox(
+                height: 40,
+                child: FilledButton(
+                  onPressed: () {},
+                  child: const Text('Save'),
+                ),
               ),
-            )
-
-            // const SizedBox(height: 30),
-          ]),
+            ],
+          ),
         ),
-        // const SizedBox(width: 30),
       ),
+    );
+  }
+
+  void signOutPress(BuildContext context) {
+    authService.authUserSignOut();
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: ((context) => const MyLoginScreen()),
+      ),
+      (route) => false,
     );
   }
 
