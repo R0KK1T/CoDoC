@@ -52,6 +52,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             builder: (context) => MyHomePage(
               groupName: 'Hej',
               groupId: '',
+              fromLogin: true,
             ),
           ),
         );
@@ -185,7 +186,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
             //Sign up Button
             FilledButton(
-              
               onPressed: () {
                 signUpUser();
               },

@@ -15,11 +15,13 @@ import 'package:codoc/utils/utils.dart';
 class MyHomePage extends StatefulWidget {
   final String groupName;
   final String groupId;
+  final bool fromLogin;
 
   const MyHomePage({
     super.key,
     required this.groupName,
     required this.groupId,
+    required this.fromLogin,
   });
 
   //final List<String> imagePaths;
@@ -215,7 +217,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: StreamBuilder(
         stream: groupPosts,
         builder: (context, AsyncSnapshot snapshot) {
-          return snapshot.hasData
+          return snapshot.hasData && !widget.fromLogin
               ? CustomScrollView(
                   slivers: [
                     SliverAppBar(
@@ -227,12 +229,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           icon: Icon(Icons.group_add),
                           onPressed: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AddMembersPage(
-                                          groupId: widget.groupId,
-                                          groupName: widget.groupName,
-                                        )));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddMembersPage(
+                                  groupId: widget.groupId,
+                                  groupName: widget.groupName,
+                                ),
+                              ),
+                            );
                           },
                         ),
                       ],
@@ -296,10 +300,23 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ],
                 )
-              : Center(
-                  child: Text(
-                    'No groups',
-                  ),
+              : CustomScrollView(
+                  physics: NeverScrollableScrollPhysics(),
+                  slivers: [
+                    SliverAppBar(
+                      title: Text('CoLog'),
+                      centerTitle: true,
+                      pinned: true,
+                    ),
+                    SliverFillRemaining(
+                      child: Center(
+                        child: Text(
+                          'No group selected',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ),
+                  ],
                 );
         },
       ),
@@ -412,8 +429,11 @@ class ListViewGroupTile extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-            builder: (context) =>
-                MyHomePage(groupName: groupName, groupId: groupId),
+            builder: (context) => MyHomePage(
+              groupName: groupName,
+              groupId: groupId,
+              fromLogin: false,
+            ),
           ),
           (route) => false,
         );
